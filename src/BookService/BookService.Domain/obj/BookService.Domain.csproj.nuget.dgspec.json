@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\check-merge\\bookbridge-backend\\src\\Services\\BookService\\BookService.Domain\\BookService.Domain.csproj": {}
+    "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {}
   },
   "projects": {
-    "E:\\check-merge\\bookbridge-backend\\src\\Services\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
+    "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\check-merge\\bookbridge-backend\\src\\Services\\BookService\\BookService.Domain\\BookService.Domain.csproj",
+        "projectUniqueName": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj",
         "projectName": "BookService.Domain",
-        "projectPath": "E:\\check-merge\\bookbridge-backend\\src\\Services\\BookService\\BookService.Domain\\BookService.Domain.csproj",
+        "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj",
         "packagesPath": "C:\\Users\\Chinh\\.nuget\\packages\\",
-        "outputPath": "E:\\check-merge\\bookbridge-backend\\src\\Services\\BookService\\BookService.Domain\\obj\\",
+        "outputPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Chinh\\AppData\\Roaming\\NuGet\\NuGet.Config"

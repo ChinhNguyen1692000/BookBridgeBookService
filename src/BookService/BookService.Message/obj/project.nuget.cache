@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JM2pevcZz0I=",
+  "dgSpecHash": "4jB8TEAC7MA=",
   "success": true,
-  "projectFilePath": "E:\\check-merge\\bookbridge-backend\\src\\Services\\BookService\\BookService.Message\\BookService.Message.csproj",
+  "projectFilePath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\BookService.Message.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
