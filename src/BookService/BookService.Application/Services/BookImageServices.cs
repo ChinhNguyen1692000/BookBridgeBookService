@@ -3,11 +3,6 @@ using BookService.Application.Interface;
 using BookService.Application.Models;
 using BookService.Domain.Entities;
 using BookService.Infracstructure.Repositories;
-using BookstoreService.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace BookService.Application.Services
 {
     public class BookImageServices : IBookImageServices
