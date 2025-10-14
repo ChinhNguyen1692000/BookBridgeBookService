@@ -54,7 +54,7 @@ namespace BookService.Infracstructure.Repositories
         public async Task<List<Book>> SearchByTitleOrAuthor(string? searchValue)
         {
             var bL = _dbSet.Include(b => b.BookType).Where(b => b.IsActive).AsQueryable();
-            if (!searchValue.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(searchValue))
             {
                 bL =  bL.Where(b => b.Title.ToLower().Contains(searchValue.ToLower()) || b.Author.ToLower().Contains(searchValue.ToLower()));
             }
