@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Azure;
 using BookService.Application.Interface;
 using BookService.Application.Models;
 using BookService.Domain.Entities;
