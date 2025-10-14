@@ -5,13 +5,13 @@ services:
     build:
       context: .
       dockerfile: src/BookService/BookService.Api/Dockerfile
-    container_name: bookbridge_bookservice
+    container_name: bookservice
     environment:
       ConnectionStrings__BookServiceConnection: User Id=postgres.qkvwegpygfusjevgvodl;Password=0328802216Zz.;Server=aws-1-us-east-1.pooler.supabase.com;Port=5432;Database=postgres;SslMode=Require;Trust Server Certificate=true;
       Jwt__Key: BookbridgeJWTKey_2025_Secure_ABC123!
       ASPNETCORE_ENVIRONMENT: Development
     ports:
       - "5142:8080"
-      
+
 volumes:
   pgadmin_data:
