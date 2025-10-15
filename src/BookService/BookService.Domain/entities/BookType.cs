@@ -18,5 +18,6 @@ namespace BookService.Domain.Entities
         [MaxLength(255)]
         public string? Description { get; set; }
         public bool isActive { get; set; }
+        public string? ImageUrl{ get; set; }
     }
 }

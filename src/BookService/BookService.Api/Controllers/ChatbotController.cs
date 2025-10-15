@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using BookService.Infracstructure.DBContext; // sửa namespace nếu khác
+using BookService.Infracstructure.DBContext;
+using System.Text.Json.Nodes; // sửa namespace nếu khác
 
 namespace BookService.Api.Controllers
 {
@@ -79,7 +80,7 @@ namespace BookService.Api.Controllers
                 new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
             );
 
-            // var json = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync();
             // // return Content(json, "application/json");
             // if (!response.IsSuccessStatusCode)
             // {
