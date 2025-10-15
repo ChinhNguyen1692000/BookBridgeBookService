@@ -45,28 +45,56 @@ namespace BookService.Api.Controllers
 
             // 2. Chuẩn bị request đến OpenRouter (miễn phí / open model)
             var http = _httpClientFactory.CreateClient();
-            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {_config["OpenRouter:ApiKey"]}");
-            http.DefaultRequestHeaders.Add("User-Agent", "BookBridgeChatbot/1.0");
-            http.DefaultRequestHeaders.Add("HTTP-Referer", "https://bookbridgebookservice.onrender.com");
+            // http.DefaultRequestHeaders.Add("Authorization", $"Bearer {_config["OpenRouter:ApiKey"]}");
+            // http.DefaultRequestHeaders.Add("User-Agent", "BookBridgeChatbot/1.0");
+            // http.DefaultRequestHeaders.Add("HTTP-Referer", "https://bookbridgebookservice.onrender.com");
+            http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {_config["OpenRouter:ApiKey"]}");
+            http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "BookBridgeChatbot/1.0");
+            http.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://bookbridgebookservice.onrender.com");
+
             http.DefaultRequestHeaders.Add("X-Title", "BookBridge Chatbot");
+
+            // var body = new
+            // {
+            //     model = "meta-llama/llama-3-8b-instruct", // đổi model cho chắc chắn
+            //     messages = new[]
+            //     {
+            //         new { role = "system", content = "Bạn là chatbot tư vấn hệ thống quản lý nhà sách BookBridge." },
+            //         new { role = "user", content = $"{contextData}\n\nCâu hỏi: {request.Question}" }
+            // }
+            // };
 
             var body = new
             {
-                model = "meta-llama/llama-3-8b-instruct", // đổi model cho chắc chắn
+                model = "bookbridge-chatbot", // dùng slug của preset bạn tạo
                 messages = new[]
                 {
-        new { role = "system", content = "Bạn là chatbot tư vấn hệ thống quản lý nhà sách BookBridge." },
-        new { role = "user", content = $"{contextData}\n\nCâu hỏi: {request.Question}" }
-    }
+                    new { role = "user", content = $"{contextData}\n\nCâu hỏi: {request.Question}" }
+                }
             };
+
 
             var response = await http.PostAsync(
                 "https://openrouter.ai/api/v1/chat/completions",
                 new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
             );
 
-            var json = await response.Content.ReadAsStringAsync();
-            return Content(json, "application/json");
+            // var json = await response.Content.ReadAsStringAsync();
+            // // return Content(json, "application/json");
+            // if (!response.IsSuccessStatusCode)
+            // {
+            //     return StatusCode((int)response.StatusCode, new { error = json });
+            // }
+
+            var jsonDoc = JsonNode.Parse(json);
+            var message = jsonDoc?["choices"]?[0]?["message"]?["content"]?.ToString();
+
+            if (string.IsNullOrEmpty(message))
+            {
+                return StatusCode(500, new { error = "Không nhận được phản hồi từ AI." });
+            }
+
+return Ok(new { answer = message });
         }
     }
 
