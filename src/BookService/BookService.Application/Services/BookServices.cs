@@ -33,7 +33,7 @@ namespace BookService.Application.Services
         }
         public async Task<PagedResult<Book>> GetAllAsync(int pageNo, int pageSize)
         {
-            var bL = await _repo.GetAllAsync();
+            var bL = await _repo.GetAllBook();
             var bLPaging = PagedResult<Book>.Create(bL, pageNo, pageSize);
             return bLPaging;
         }

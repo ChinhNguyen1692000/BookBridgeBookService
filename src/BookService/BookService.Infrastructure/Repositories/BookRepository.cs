@@ -47,7 +47,7 @@ namespace BookService.Infracstructure.Repositories
             (price.HasValue && b.Price <= price) &&
             (b.IsActive)).ToListAsync();
         }
-        public async Task<List<Book>> GetAllAsync()
+        public async Task<List<Book>> GetAllBook()
         {
             return await _dbSet.Include(b => b.BookType).Where(b => b.IsActive).ToListAsync();
         }
