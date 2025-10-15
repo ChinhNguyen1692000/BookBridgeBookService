@@ -22,6 +22,9 @@ namespace BookService.Api.Controllers
             _config = config;
         }
 
+        [HttpGet("api/chatbot/ping")]
+        public IActionResult Ping() => Ok("Chatbot API is alive!");
+
         [HttpPost("ask")]
         public async Task<IActionResult> Ask([FromBody] ChatRequest request)
         {
@@ -40,20 +43,21 @@ namespace BookService.Api.Controllers
                 contextData += $"- {b.Title} ({b.BookType?.Name ?? "Không rõ thể loại"})\n";
             }
 
-            // 🔧 2. Chuẩn bị request đến OpenRouter (miễn phí / open model)
+            // 2. Chuẩn bị request đến OpenRouter (miễn phí / open model)
             var http = _httpClientFactory.CreateClient();
             http.DefaultRequestHeaders.Add("Authorization", $"Bearer {_config["OpenRouter:ApiKey"]}");
+            http.DefaultRequestHeaders.Add("User-Agent", "BookBridgeChatbot/1.0");
             http.DefaultRequestHeaders.Add("HTTP-Referer", "https://bookbridgebookservice.onrender.com");
             http.DefaultRequestHeaders.Add("X-Title", "BookBridge Chatbot");
 
             var body = new
             {
-                model = "mistralai/mistral-7b-instruct", // miễn phí model trên OpenRouter
+                model = "meta-llama/llama-3-8b-instruct", // đổi model cho chắc chắn
                 messages = new[]
                 {
-                    new { role = "system", content = "Bạn là chatbot tư vấn hệ thống quản lý nhà sách BookBridge." },
-                    new { role = "user", content = $"{contextData}\n\nCâu hỏi: {request.Question}" }
-                }
+        new { role = "system", content = "Bạn là chatbot tư vấn hệ thống quản lý nhà sách BookBridge." },
+        new { role = "user", content = $"{contextData}\n\nCâu hỏi: {request.Question}" }
+    }
             };
 
             var response = await http.PostAsync(
