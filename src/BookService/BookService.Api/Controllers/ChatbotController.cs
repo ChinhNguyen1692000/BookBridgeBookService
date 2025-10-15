@@ -28,7 +28,7 @@ namespace BookService.Api.Controllers
             if (string.IsNullOrWhiteSpace(request.Question))
                 return BadRequest("Question cannot be empty");
 
-            // 🧠 1. Lấy dữ liệu thật từ DB (RAG)
+            // 1. Lấy dữ liệu thật từ DB (RAG)
             var books = await _context.Books
                 .Include(b => b.BookType)
                 .Take(5)
