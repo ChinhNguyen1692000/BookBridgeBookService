@@ -33,6 +33,8 @@ builder.Services.AddScoped<BookRepository>();
 builder.Services.AddScoped<BookTypeRepository>();
 // builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+builder.Services.AddHttpClient();
+
 
 // 3. JWT
 var jwtKey = configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is not configured.");
