@@ -25,9 +25,9 @@ namespace BookService.Application.Services
             var bLPaging = PagedResult<Book>.Create(bL, pageNo, pageSize);
             return bLPaging;
         }
-        public async Task<PagedResult<Book>> Filter(int? typeId, decimal? price, int pageNo = 1, int pageSize = 10)
+        public async Task<PagedResult<Book>> Filter(BookFilterRequest request, int pageNo = 1, int pageSize = 10)
         {
-            var bL = await _repo.Filter(typeId, price);
+            var bL = await _repo.Filter(request.TypeId, request.Price, request.SearchValue);
             var bLPaging = PagedResult<Book>.Create(bL, pageNo, pageSize);
             return bLPaging;
         }
@@ -85,6 +85,15 @@ namespace BookService.Application.Services
             var bL = await _repo.GetUnactiveBookByBookStore(bookstoreId);
             var bLPaging = PagedResult<Book>.Create(bL, pageNo, pageSize);
             return bLPaging;
+        }
+
+        public async Task<bool> BuyBook(BookBuyRequest request)
+        {
+            return await _repo.BuyBook(request.Id, request.Quantity);
+        }
+        public async Task<bool> RefundBook(BookRefundRequest request)
+        {
+            return await _repo.RefundBook(request.Id, request.Quantity);
         }
     }
 }

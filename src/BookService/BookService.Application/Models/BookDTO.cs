@@ -30,6 +30,7 @@ namespace BookService.Application.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public bool IsActive { get; set; } = true;
+        public int Quantity { get; set; }
     }
     public class BookCreateRequest
     {
@@ -46,6 +47,7 @@ namespace BookService.Application.Models
         public int? PageCount { get; set; }
         public int TypeId { get; set; }
         public string ImageUrl { get; set; }
+        public int Quantity { get; set; }
     }
     public class BookUpdateReuest
     {
@@ -63,5 +65,23 @@ namespace BookService.Application.Models
         public int? PageCount { get; set; }
         public int TypeId { get; set; }
         public string ImageUrl { get; set; }
+        public int Quantity { get; set; }
+    }
+    public class BookFilterRequest
+    {
+        public int? TypeId { get; set; }
+        public decimal? Price { get; set; }
+        public string? SearchValue { get; set; }
+    }
+
+    public class BookBuyRequest
+    {
+        public int Id { get; set; }
+        public int Quantity { get; set; }
+    }
+    public class BookRefundRequest
+    {
+        public int Id { get; set; }
+        public int Quantity { get; set; }
     }
 }

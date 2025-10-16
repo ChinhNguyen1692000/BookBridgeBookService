@@ -40,11 +40,12 @@ namespace BookService.Infracstructure.Repositories
         {
             return await _dbSet.Include(b => b.BookType).Include(b => b.BookImages).FirstOrDefaultAsync(b => b.Id == id);
         }
-        public async Task<List<Book>> Filter(int? typeId, decimal? price)
+        public async Task<List<Book>> Filter(int? typeId, decimal? price, string? searchValue)
         {
             return await _dbSet.Include(b => b.BookType).Where(b =>
-            (typeId != null && b.TypeId == typeId) ||
+            (typeId != null && b.TypeId == typeId) &&
             (price.HasValue && b.Price <= price) &&
+            (!string.IsNullOrEmpty(searchValue) && b.Author.ToLower().Contains(searchValue.ToLower()) || b.Title.ToLower().Contains(searchValue.ToLower())) &&
             (b.IsActive)).ToListAsync();
         }
         public async Task<List<Book>> GetAllBook()
@@ -56,9 +57,37 @@ namespace BookService.Infracstructure.Repositories
             var bL = _dbSet.Include(b => b.BookType).Where(b => b.IsActive).AsQueryable();
             if (!string.IsNullOrEmpty(searchValue))
             {
-                bL =  bL.Where(b => b.Title.ToLower().Contains(searchValue.ToLower()) || b.Author.ToLower().Contains(searchValue.ToLower()));
+                bL = bL.Where(b => b.Title.ToLower().Contains(searchValue.ToLower()) || b.Author.ToLower().Contains(searchValue.ToLower()));
             }
             return await bL.ToListAsync();
+        }
+
+
+        public async Task<bool> BuyBook(int id, int quantity)
+        {
+            var entity = await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+            if (entity == null)
+            {
+                return false;
+            }
+            if (entity.Quantity < quantity)
+            {
+                return false;
+            }
+            entity.Quantity -= quantity;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> RefundBook(int id, int quantity)
+        {
+            var entity = await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+            if (entity == null)
+            {
+                return false;
+            }
+            entity.Quantity += quantity;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

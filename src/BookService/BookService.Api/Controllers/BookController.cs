@@ -15,7 +15,16 @@ namespace BookService.Api.Controllers
         {
             _service = service;
         }
-
+        [HttpPost("buy")]
+        public async Task<bool> BuyBook(BookBuyRequest request)
+        {
+            return await _service.BuyBook(request);
+        }
+        [HttpPost("refund")]
+        public async Task<bool> RefundBook(BookRefundRequest request)
+        {
+            return await _service.RefundBook(request);
+        }
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int pageNo = 1, [FromQuery] int pageSize = 10)
         {
@@ -84,11 +93,11 @@ namespace BookService.Api.Controllers
             return Ok(result);
         }
         [HttpGet("filter")]
-        public async Task<IActionResult> Filter(int? typeId, decimal? price, int pageNo = 1, int pageSize = 10)
+        public async Task<IActionResult> Filter(BookFilterRequest request, int pageNo = 1, int pageSize = 10)
         {
             try
             {
-                var result = await _service.Filter(typeId, price, pageNo, pageSize);
+                var result = await _service.Filter(request, pageNo, pageSize);
 
                 if (result == null)
                     return NotFound("No matching book found");
@@ -106,7 +115,7 @@ namespace BookService.Api.Controllers
             try
             {
                 var result = await _service.Search(searchValue, pageNo, pageSize);
-                if(result == null)
+                if (result == null)
                 {
                     return NotFound("No matching book found");
                 }

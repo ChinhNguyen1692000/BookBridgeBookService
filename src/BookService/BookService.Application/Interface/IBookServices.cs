@@ -11,8 +11,10 @@ namespace BookService.Application.Interface
 {
     public interface IBookServices
     {
+        Task<bool> BuyBook(BookBuyRequest request);
+        Task<bool> RefundBook(BookRefundRequest request);
         Task<PagedResult<Book>> Search(string? searchValue, int pageNo = 1, int pageSize = 10);
-        Task<PagedResult<Book>> Filter(int? typeId, decimal? price, int pageNo = 1, int pageSize = 10);
+        Task<PagedResult<Book>> Filter(BookFilterRequest request, int pageNo = 1, int pageSize = 10);
         Task<PagedResult<Book>> GetAllAsync(int pageNo, int pageSize);
 
         Task<Book> GetByIdAsync(int id);

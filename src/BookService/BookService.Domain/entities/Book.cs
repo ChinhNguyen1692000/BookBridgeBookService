@@ -63,5 +63,7 @@ namespace BookService.Domain.Entities
 
         // Navigation
         public ICollection<BookImage> BookImages { get; set; } = new List<BookImage>();
+
+        public int Quantity{ get; set; }
     }
 }
