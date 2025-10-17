@@ -93,7 +93,7 @@ namespace BookService.Api.Controllers
             return Ok(result);
         }
         [HttpGet("filter")]
-        public async Task<IActionResult> Filter(BookFilterRequest request, int pageNo = 1, int pageSize = 10)
+        public async Task<IActionResult> Filter([FromQuery] BookFilterRequest request,[FromQuery] int pageNo = 1,[FromQuery] int pageSize = 10)
         {
             try
             {

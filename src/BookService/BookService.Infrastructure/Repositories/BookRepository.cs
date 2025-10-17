@@ -42,11 +42,23 @@ namespace BookService.Infracstructure.Repositories
         }
         public async Task<List<Book>> Filter(int? typeId, decimal? price, string? searchValue)
         {
-            return await _dbSet.Include(b => b.BookType).Where(b =>
-            (typeId != null && b.TypeId == typeId) &&
-            (price.HasValue && b.Price <= price) &&
-            (!string.IsNullOrEmpty(searchValue) && b.Author.ToLower().Contains(searchValue.ToLower()) || b.Title.ToLower().Contains(searchValue.ToLower())) &&
-            (b.IsActive)).ToListAsync();
+            var query = _dbSet.Include(b => b.BookType).Where(b => b.IsActive);
+
+            if (typeId.HasValue)
+                query = query.Where(b => b.TypeId == typeId);
+
+            if (price.HasValue)
+                query = query.Where(b => b.Price <= price.Value);
+
+            if (!string.IsNullOrWhiteSpace(searchValue))
+            {
+                var lower = searchValue.ToLower();
+                query = query.Where(b =>
+                    b.Author.ToLower().Contains(lower) ||
+                    b.Title.ToLower().Contains(lower));
+            }
+
+            return await query.ToListAsync();
         }
         public async Task<List<Book>> GetAllBook()
         {

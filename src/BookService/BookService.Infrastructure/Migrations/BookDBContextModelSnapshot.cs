@@ -85,6 +85,9 @@ namespace BookService.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("RatingsCount")
                         .HasColumnType("integer");
 

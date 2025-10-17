@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookService.Infrastructure.Migrations
 {
     [DbContext(typeof(BookDBContext))]
-    [Migration("20251014154335_InitialPostgreSetup")]
+    [Migration("20251016155057_InitialPostgreSetup")]
     partial class InitialPostgreSetup
     {
         /// <inheritdoc />
@@ -88,6 +88,9 @@ namespace BookService.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("RatingsCount")
                         .HasColumnType("integer");
 
@@ -152,6 +155,9 @@ namespace BookService.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
