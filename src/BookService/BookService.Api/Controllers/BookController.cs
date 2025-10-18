@@ -15,16 +15,6 @@ namespace BookService.Api.Controllers
         {
             _service = service;
         }
-        [HttpPost("buy")]
-        public async Task<bool> BuyBook(BookBuyRequest request)
-        {
-            return await _service.BuyBook(request);
-        }
-        [HttpPost("refund")]
-        public async Task<bool> RefundBook(BookRefundRequest request)
-        {
-            return await _service.RefundBook(request);
-        }
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int pageNo = 1, [FromQuery] int pageSize = 10)
         {
@@ -93,7 +83,7 @@ namespace BookService.Api.Controllers
             return Ok(result);
         }
         [HttpGet("filter")]
-        public async Task<IActionResult> Filter([FromQuery] BookFilterRequest request,[FromQuery] int pageNo = 1,[FromQuery] int pageSize = 10)
+        public async Task<IActionResult> Filter([FromQuery] BookFilterRequest request, [FromQuery] int pageNo = 1, [FromQuery] int pageSize = 10)
         {
             try
             {

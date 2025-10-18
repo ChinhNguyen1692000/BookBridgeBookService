@@ -1,4 +1,5 @@
 ﻿using BookService.Application.Models;
+using BookService.Domain.Data;
 using BookService.Domain.Entities;
 using Common.Paging;
 using System;
@@ -11,8 +12,8 @@ namespace BookService.Application.Interface
 {
     public interface IBookServices
     {
-        Task<bool> BuyBook(BookBuyRequest request);
-        Task<bool> RefundBook(BookRefundRequest request);
+        Task<bool> BuyBook(List<BookBuyRefund> request);
+        Task<bool> RefundBook(List<BookBuyRefund> request);
         Task<PagedResult<Book>> Search(string? searchValue, int pageNo = 1, int pageSize = 10);
         Task<PagedResult<Book>> Filter(BookFilterRequest request, int pageNo = 1, int pageSize = 10);
         Task<PagedResult<Book>> GetAllAsync(int pageNo, int pageSize);

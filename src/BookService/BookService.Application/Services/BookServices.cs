@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookService.Application.Interface;
 using BookService.Application.Models;
+using BookService.Domain.Data;
 using BookService.Domain.Entities;
 using BookService.Infracstructure.Repositories;
 using Common.Paging;
@@ -27,7 +28,7 @@ namespace BookService.Application.Services
         }
         public async Task<PagedResult<Book>> Filter(BookFilterRequest request, int pageNo = 1, int pageSize = 10)
         {
-            var bL = await _repo.Filter(request.TypeId, request.Price, request.SearchValue);
+            var bL = await _repo.Filter(request.typeId, request.price, request.searchValue);
             var bLPaging = PagedResult<Book>.Create(bL, pageNo, pageSize);
             return bLPaging;
         }
@@ -87,13 +88,13 @@ namespace BookService.Application.Services
             return bLPaging;
         }
 
-        public async Task<bool> BuyBook(BookBuyRequest request)
+        public async Task<bool> BuyBook(List<BookBuyRefund> request)
         {
-            return await _repo.BuyBook(request.Id, request.Quantity);
+            return await _repo.BuyBooksAsync(request);
         }
-        public async Task<bool> RefundBook(BookRefundRequest request)
+        public async Task<bool> RefundBook(List<BookBuyRefund> request)
         {
-            return await _repo.RefundBook(request.Id, request.Quantity);
+            return await _repo.RefundBooksAsync(request);
         }
     }
 }

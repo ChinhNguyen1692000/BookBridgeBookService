@@ -1,4 +1,5 @@
-﻿using BookService.Domain.Entities;
+﻿using BookService.Domain.Data;
+using BookService.Domain.Entities;
 using BookService.Infracstructure.DBContext;
 using Common.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -75,29 +76,49 @@ namespace BookService.Infracstructure.Repositories
         }
 
 
-        public async Task<bool> BuyBook(int id, int quantity)
+        public async Task<bool> BuyBooksAsync(List<BookBuyRefund> items)
         {
-            var entity = await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
-            if (entity == null)
+            var ids = items.Select(i => i.BookId).ToList();
+
+            var books = await _dbSet.Where(b => ids.Contains(b.Id)).ToListAsync();
+
+            foreach (var item in items)
             {
-                return false;
+                var book = books.FirstOrDefault(b => b.Id == item.BookId);
+                if (book == null || book.Quantity < item.Quantity)
+                {
+                    return false; // Một cuốn không đủ => rollback toàn bộ
+                }
             }
-            if (entity.Quantity < quantity)
+
+            foreach (var item in items)
             {
-                return false;
+                var book = books.First(b => b.Id == item.BookId);
+                book.Quantity -= item.Quantity;
             }
-            entity.Quantity -= quantity;
+
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<bool> RefundBook(int id, int quantity)
+
+        public async Task<bool> RefundBooksAsync(List<BookBuyRefund> items)
         {
-            var entity = await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
-            if (entity == null)
-            {
+            var ids = items.Select(i => i.BookId).ToList();
+            var books = await _dbSet.Where(b => ids.Contains(b.Id)).ToListAsync();
+
+            // Kiểm tra xem tất cả ID có tồn tại không
+            if (books.Count != items.Count)
                 return false;
+
+            foreach (var item in items)
+            {
+                var book = books.FirstOrDefault(b => b.Id == item.BookId);
+                if (book == null)
+                    return false;
+
+                book.Quantity += item.Quantity;
             }
-            entity.Quantity += quantity;
+
             await _context.SaveChangesAsync();
             return true;
         }
