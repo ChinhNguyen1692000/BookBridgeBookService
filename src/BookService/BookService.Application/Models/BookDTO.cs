@@ -69,9 +69,9 @@ namespace BookService.Application.Models
     }
     public class BookFilterRequest
     {
-        public int? TypeId { get; set; }
-        public decimal? Price { get; set; }
-        public string? SearchValue { get; set; }
+        public int? typeId { get; set; }
+        public decimal? price { get; set; }
+        public string? searchValue { get; set; }
     }
 
     public class BookBuyRequest
