@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization; 
+using System.Text.Json.Serialization;
 using BookService.Infracstructure.DBContext;
 using BookService.Domain.Entities;
 
@@ -28,6 +28,9 @@ namespace BookService.Api.Controllers
         [HttpGet("ping")]
         public IActionResult Ping() => Ok("Chatbot API is alive!");
 
+        // --------------------------------------------------------------------------------------
+        // ENDPOINT /api/chatbot/ask (Dùng cho toàn hệ thống)
+        // --------------------------------------------------------------------------------------
         [HttpPost("ask")]
         public async Task<IActionResult> Ask([FromBody] ChatRequest request)
         {
@@ -35,20 +38,21 @@ namespace BookService.Api.Controllers
                 return BadRequest("Question cannot be empty");
 
             // 1️⃣ Lấy dữ liệu chi tiết từ DB (RAG)
-            // Lấy 5 cuốn sách đầu tiên (hoặc phổ biến)
             var books = await _context.Books
                 .Include(b => b.BookType)
                 .Include(b => b.BookImages)
-                .OrderByDescending(b => b.RatingsCount) // Giả sử lấy 5 cuốn phổ biến nhất
+                .OrderByDescending(b => b.RatingsCount)
                 .Take(5)
                 .ToListAsync();
 
-            // Tạo danh sách BookInfo để trả về (sử dụng BookstoreId mặc định là 0 hoặc gán BookstoreId thật nếu có)
+            // Cập nhật: Tạo danh sách BookInfo đầy đủ các trường
             var bookInfos = books.Select(b => new BookInfo
             {
                 Id = b.Id,
                 Title = b.Title,
-                BookstoreId = b.BookstoreId // Gán 0 nếu BookstoreId là null, hoặc gán giá trị thật
+                BookstoreId = b.BookstoreId,
+                Price = b.Price, // Thêm Price
+                ImageUrl = b.BookImages.FirstOrDefault()?.ImageUrl // Thêm ImageUrl đầu tiên
             }).ToList();
 
 
@@ -69,6 +73,7 @@ namespace BookService.Api.Controllers
 
             var prompt = $"Bạn là một trợ lý thông minh về sách. Hãy trả lời câu hỏi của người dùng dựa trên ngữ cảnh sau. Khi nhắc đến sách, hãy thêm ID [ID] vào sau tên sách.\n\n{contextData}\n\nNgười dùng hỏi: {request.Question}";
 
+            // ... (Phần gán body và gọi API Gemini) ...
             var body = new
             {
                 contents = new[]
@@ -103,9 +108,8 @@ namespace BookService.Api.Controllers
         }
 
         // --------------------------------------------------------------------------------------
-        // CẬP NHẬT ENDPOINT AskByStore
+        // ENDPOINT /api/chatbot/ask/store (Dùng cho từng cửa hàng)
         // --------------------------------------------------------------------------------------
-
         [HttpPost("ask/store")]
         public async Task<IActionResult> AskByStore([FromBody] StoreChatRequest request)
         {
@@ -115,7 +119,7 @@ namespace BookService.Api.Controllers
             if (request.BookstoreId <= 0)
                 return BadRequest("BookstoreId phải lớn hơn 0");
 
-            // Xử lý từ khóa tìm kiếm và truy vấn DB (Phần này giữ nguyên logic tốt)
+            // ... (Logic lọc sách theo từ khóa và giá tiền - giữ nguyên) ...
             var searchTerms = request.Message.ToLower().Split(new[] { ' ', ',', '.', ';' }, StringSplitOptions.RemoveEmptyEntries);
             var minPrice = 0m;
             var maxPrice = decimal.MaxValue;
@@ -172,16 +176,17 @@ namespace BookService.Api.Controllers
                     return Ok(new ChatbotResponse { Answer = "Xin lỗi, không tìm thấy sách nào trong cửa hàng này.", Books = new List<BookInfo>() });
             }
 
-            // Đã sửa lỗi CS1061 và đảm bảo gán Books
+            // Cập nhật: Tạo danh sách BookInfo đầy đủ các trường
             var bookInfos = books.Select(b => new BookInfo
             {
                 Id = b.Id,
                 Title = b.Title,
-                // Loại bỏ .Value vì BookstoreId thường là int, hoặc int? (đã xử lý null ở trên)
-                BookstoreId = b.BookstoreId
+                BookstoreId = b.BookstoreId,
+                Price = b.Price, // Thêm Price
+                ImageUrl = b.BookImages.FirstOrDefault()?.ImageUrl // Thêm ImageUrl đầu tiên
             }).ToList();
 
-            // 2️⃣ Tạo context chi tiết
+            // 2️⃣ Tạo context chi tiết (dùng cho prompt)
             string contextData = $"Dữ liệu các sách trong cửa hàng {request.BookstoreId} liên quan đến yêu cầu:\n";
             foreach (var b in books)
             {
@@ -191,15 +196,12 @@ namespace BookService.Api.Controllers
                 contextData += $"  Mô tả: {b.Description ?? "Không có mô tả"}\n";
             }
 
-            // 3️⃣ Gửi request đến Gemini
+            // 3️⃣ Gửi request đến Gemini (Phần prompt giữ nguyên để yêu cầu Structured Output)
             var http = _httpClientFactory.CreateClient();
             var apiKey = _config["Gemini:ApiKey"];
             http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "BookBridgeChatbot/1.0");
             http.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://bookbridgebookservice.onrender.com");
 
-            // ----------------------------------------------------
-            // PROMPT YÊU CẦU STRUCTURED OUTPUT VÀ LINKING
-            // ----------------------------------------------------
             var prompt = $@"
 Bạn là một trợ lý thông minh có thể truy cập database của hệ thống. 
 Nhiệm vụ của bạn là trả lời người dùng dựa trên ngữ cảnh sách được cung cấp dưới đây, và **luôn luôn** đính kèm dữ liệu sách liên quan dưới dạng JSON theo format bắt buộc.
@@ -262,24 +264,25 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
             // LOGIC PHÂN TÁCH PHẢN HỒI (TÁCH TEXT VÀ JSON)
             // ----------------------------------------------------
             const string startDelimiter = "----";
-            // const string endDelimiter = "----"; // Sử dụng biến đã khai báo
             string naturalAnswer = rawResponseText;
 
             int startIndex = rawResponseText.IndexOf(startDelimiter);
-            int endIndex = rawResponseText.LastIndexOf(startDelimiter); // Chỉ cần tìm startDelimiter lần cuối
 
-            if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
+            if (startIndex != -1)
             {
                 // Lấy phần văn bản tự nhiên (phần trước JSON)
                 naturalAnswer = rawResponseText.Substring(0, startIndex).Trim();
-                
-                // (Không cần trích xuất JSON Books vì ta sử dụng bookInfos đã có để đảm bảo độ chính xác)
+
+                // Giữ nguyên bookInfos từ DB query
             }
-            // Nếu không tìm thấy JSON, naturalAnswer = rawResponseText, và ta vẫn dùng bookInfos.
 
             // 4️⃣ Trả về dữ liệu cấu trúc (JSON) để hỗ trợ liên kết
             return Ok(new ChatbotResponse { Answer = naturalAnswer, Books = bookInfos });
         }
+
+        // --------------------------------------------------------------------------------------
+        // MODELS
+        // --------------------------------------------------------------------------------------
 
         // Request model cho bookstore
         public class StoreChatRequest
@@ -292,10 +295,10 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
         public class ChatbotResponse
         {
             public string Answer { get; set; }
-            public List<BookInfo>? Books { get; set; } // Dùng cho AskByStore để tạo liên kết
+            public List<BookInfo>? Books { get; set; }
         }
 
-        // Model chứa thông tin cần thiết để tạo liên kết
+        // Model chứa thông tin cần thiết để tạo liên kết và hiển thị
         public class BookInfo
         {
             [JsonPropertyName("Id")]
@@ -305,7 +308,14 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
             public string Title { get; set; }
 
             [JsonPropertyName("BookstoreId")]
-            public int BookstoreId { get; set; } 
+            public int BookstoreId { get; set; }
+
+            // CÁC TRƯỜNG THÊM VÀO
+            [JsonPropertyName("Price")]
+            public decimal Price { get; set; } // Thêm giá
+
+            [JsonPropertyName("ImageUrl")]
+            public string? ImageUrl { get; set; } // Thêm URL hình ảnh đầu tiên
         }
     }
 
