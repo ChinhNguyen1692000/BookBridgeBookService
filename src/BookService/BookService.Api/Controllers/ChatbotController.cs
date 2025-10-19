@@ -125,7 +125,7 @@ namespace BookService.Api.Controllers
                 }
             }
 
-            // 1️⃣ Lọc sách theo BookstoreId và Tiêu chí tìm kiếm linh hoạt
+            // Lọc sách theo BookstoreId và Tiêu chí tìm kiếm linh hoạt
             var query = _context.Books
                 .Include(b => b.BookType)
                 .Include(b => b.BookImages)
