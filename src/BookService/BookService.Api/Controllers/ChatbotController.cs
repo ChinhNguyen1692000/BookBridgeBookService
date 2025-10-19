@@ -8,7 +8,8 @@ using System.Text.Json.Serialization;
 using BookService.Infracstructure.DBContext;
 using BookService.Domain.Entities;
 using System.Linq;
-using LinqKit; 
+using LinqKit;
+using System.Text.RegularExpressions; // Thêm thư viện này để xử lý JSON
 
 namespace BookService.Api.Controllers
 {
@@ -41,68 +42,59 @@ namespace BookService.Api.Controllers
 
             // 1️⃣ LOGIC TÌM KIẾM THEO TỪ KHÓA (FUZZY SEARCH)
             var searchTerms = request.Question.ToLower().Split(new[] { ' ', ',', '.', ';', ':', '?', '!' }, StringSplitOptions.RemoveEmptyEntries)
-                                             .Where(t => t.Length > 2) 
+                                             .Where(t => t.Length > 2)
                                              .Distinct()
                                              .Take(5)
                                              .ToList();
 
             var booksQuery = _context.Books
                 .Include(b => b.BookType)
-                .AsExpandable(); 
+                .AsExpandable();
 
-            var predicate = PredicateBuilder.New<Book>(true); 
+            var predicate = PredicateBuilder.New<Book>(true);
 
             // Xây dựng điều kiện OR dựa trên từ khóa để tìm kiếm linh hoạt
             if (searchTerms.Any())
             {
-                var keywordPredicate = PredicateBuilder.New<Book>(false); 
-                
+                var keywordPredicate = PredicateBuilder.New<Book>(false);
+
                 foreach (var term in searchTerms)
                 {
-                    var innerTerm = term; 
-                    keywordPredicate = keywordPredicate.Or(b => 
+                    var innerTerm = term;
+                    keywordPredicate = keywordPredicate.Or(b =>
                         EF.Functions.ILike(b.Title, $"%{innerTerm}%") ||
                         (b.Author != null && EF.Functions.ILike(b.Author, $"%{innerTerm}%")) ||
                         (b.BookType != null && EF.Functions.ILike(b.BookType.Name, $"%{innerTerm}%")) ||
                         (b.Description != null && EF.Functions.ILike(b.Description, $"%{innerTerm}%"))
                     );
                 }
-                predicate = predicate.And(keywordPredicate); 
+                predicate = predicate.And(keywordPredicate);
             }
-            
+
             var books = await booksQuery.Where(predicate)
-                .OrderByDescending(b => b.AverageRating) 
+                .OrderByDescending(b => b.AverageRating)
                 .ThenByDescending(b => b.RatingsCount)
-                .Take(5) 
+                .Take(5)
                 .ToListAsync();
 
             // Nếu không tìm thấy sách nào dựa trên từ khóa hoặc câu hỏi chung chung (fallback)
             if (!books.Any() && searchTerms.Any() == false)
             {
-                 books = await _context.Books
-                    .Include(b => b.BookType)
-                    .OrderByDescending(b => b.RatingsCount)
-                    .Take(5)
-                    .ToListAsync();
+                books = await _context.Books
+                   .Include(b => b.BookType)
+                   .OrderByDescending(b => b.RatingsCount)
+                   .Take(5)
+                   .ToListAsync();
             }
 
-
-            var bookInfos = books.Select(b => new BookInfo
-            {
-                Id = b.Id,
-                Title = b.Title,
-                BookstoreId = b.BookstoreId, 
-                Price = b.Price, 
-                ImageUrl = b.ImageUrl ?? string.Empty // Xử lý null
-            }).ToList();
-
+            // ⚠️ KHÔNG CẦN TẠO bookInfos TẠM THỜI NỮA. CHÚNG TA SẼ DỰA VÀO PHẢN HỒI CỦA AI.
 
             string contextData = "Dữ liệu từ hệ thống BookBridge:\n";
             foreach (var b in books)
             {
-                contextData += $"- {b.Title} (ID: {b.Id}, {b.BookType?.Name ?? "Không rõ thể loại"})\n";
+                contextData += $"- {b.Title} (ID: {b.Id}, {b.BookstoreId}, Thể loại: {b.BookType?.Name ?? "Không rõ"})\n";
                 contextData += $"  Tác giả: {b.Author ?? "Không rõ"}\n";
-                contextData += $"  Giá: {b.Price:C}, Rating trung bình: {b.AverageRating ?? 0}\n";
+                contextData += $"  Giá: {b.Price:C}\n";
             }
 
             // 2️⃣ Chuẩn bị request đến Gemini API
@@ -111,7 +103,34 @@ namespace BookService.Api.Controllers
             http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "BookBridgeChatbot/1.0");
             http.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://bookbridgebookservice.onrender.com");
 
-            var prompt = $"Bạn là một trợ lý thông minh về sách. Hãy trả lời câu hỏi của người dùng dựa trên ngữ cảnh sau. Khi nhắc đến sách, hãy thêm ID [ID] vào sau tên sách.\n\n{contextData}\n\nNgười dùng hỏi: {request.Question}";
+            var prompt = $@"
+Bạn là một trợ lý thông minh về sách. Hãy trả lời câu hỏi của người dùng dựa trên ngữ cảnh sách được cung cấp dưới đây.
+Khi nhắc đến sách trong phần trả lời tự nhiên, hãy thêm ID [ID] vào sau tên sách (ví dụ: Tên Sách [ID]).
+
+--- CONTEXT DỮ LIỆU SÁCH ---
+{contextData}
+--- END CONTEXT ---
+
+Người dùng hỏi: {request.Question}
+
+--- HƯỚNG DẪN TRẢ LỜI ---
+1. Phản hồi: Trả lời một cách tự nhiên, hữu ích và lịch sự, sử dụng tiếng Việt.
+2. Dữ liệu JSON (BẮT BUỘC): Luôn đính kèm danh sách sách bạn tham chiếu/đề xuất vào cuối phản hồi theo định dạng JSON sau:
+
+    a. Bắt đầu bằng dòng: `----BOOKS_JSON_START----`
+    b. Dữ liệu: Một mảng JSON của các đối tượng BookInfo (chỉ chứa Id, Title, BookstoreId). **Chỉ bao gồm các sách bạn đã đề cập hoặc tham khảo trong câu trả lời tự nhiên.**
+    c. Kết thúc bằng dòng: `----BOOKS_JSON_END----`
+
+Ví dụ về JSON Sách:
+----BOOKS_JSON_START----
+[
+    {{ ""Id"": 101, ""Title"": ""Tên Sách Hay"", ""BookstoreId"": 1 }},
+    {{ ""Id"": 102, ""Title"": ""Sách Tiếp Theo"", ""BookstoreId"": 1 }}
+]
+----BOOKS_JSON_END----
+
+Hãy bắt đầu phản hồi của bạn ngay bây giờ.
+";
 
             var body = new
             {
@@ -126,7 +145,7 @@ namespace BookService.Api.Controllers
                     }
                 }
             };
-            
+
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
             var response = await http.PostAsync(
                 url,
@@ -135,15 +154,54 @@ namespace BookService.Api.Controllers
 
             var json = await response.Content.ReadAsStringAsync();
             var jsonDoc = JsonNode.Parse(json);
-            var message = jsonDoc?["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
+            var rawResponseText = jsonDoc?["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
 
-            if (string.IsNullOrEmpty(message))
+            if (string.IsNullOrEmpty(rawResponseText))
             {
                 return StatusCode(500, new { error = "Không nhận được phản hồi từ AI." });
             }
 
-            // Trả về kết quả cho frontend, kèm theo Books
-            return Ok(new ChatbotResponse { Answer = message, Books = bookInfos });
+            // 3️⃣ LOGIC PHÂN TÁCH PHẢN HỒI (TÁCH TEXT VÀ JSON)
+            const string startDelimiter = "----BOOKS_JSON_START----";
+            const string endDelimiter = "----BOOKS_JSON_END----";
+            string naturalAnswer = rawResponseText;
+            List<BookInfo> recommendedBooks = new List<BookInfo>();
+
+            // Tìm và trích xuất JSON
+            int startIndex = rawResponseText.IndexOf(startDelimiter);
+            int endIndex = rawResponseText.IndexOf(endDelimiter, startIndex + startDelimiter.Length);
+
+            if (startIndex != -1 && endIndex != -1)
+            {
+                // Lấy phần văn bản trước JSON
+                naturalAnswer = rawResponseText.Substring(0, startIndex).Trim();
+
+                // Trích xuất chuỗi JSON
+                string jsonPart = rawResponseText.Substring(startIndex + startDelimiter.Length, endIndex - (startIndex + startDelimiter.Length)).Trim();
+
+                // Thử deserialize JSON
+                try
+                {
+                    // Loại bỏ bất kỳ ký tự markdown nào mà AI có thể thêm vào
+                    jsonPart = Regex.Replace(jsonPart, @"^```json\s*|```\s*$", string.Empty, RegexOptions.Multiline).Trim();
+
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var deserializedBooks = JsonSerializer.Deserialize<List<BookInfo>>(jsonPart, options);
+
+                    if (deserializedBooks != null)
+                    {
+                        recommendedBooks = deserializedBooks;
+                    }
+                }
+                catch (JsonException ex)
+                {
+                    // Log lỗi nếu JSON không hợp lệ, nhưng vẫn trả về câu trả lời tự nhiên
+                    Console.WriteLine($"Lỗi phân tích JSON từ AI: {ex.Message}");
+                }
+            }
+
+            // Trả về kết quả cho frontend, kèm theo danh sách sách đã được AI đề xuất
+            return Ok(new ChatbotResponse { Answer = naturalAnswer, Books = recommendedBooks });
         }
 
         // --------------------------------------------------------------------------------------
@@ -181,21 +239,21 @@ namespace BookService.Api.Controllers
             var booksQuery = _context.Books
                 .Include(b => b.BookType)
                 .Where(b => b.BookstoreId == request.BookstoreId)
-                .AsExpandable(); 
+                .AsExpandable();
 
-            var predicate = PredicateBuilder.New<Book>(true); 
+            var predicate = PredicateBuilder.New<Book>(true);
 
             // Lọc theo Giá nếu có từ khóa giá
             if (priceSearched)
             {
                 predicate = predicate.And(b => b.Price >= minPrice && b.Price <= maxPrice);
             }
-            
+
             // Lọc theo Từ khóa (FUZZY SEARCH)
             if (searchTerms.Any())
             {
-                var keywordPredicate = PredicateBuilder.New<Book>(false); 
-                
+                var keywordPredicate = PredicateBuilder.New<Book>(false);
+
                 foreach (var term in searchTerms.Take(5))
                 {
                     var innerTerm = term;
@@ -206,7 +264,7 @@ namespace BookService.Api.Controllers
                         (b.Description != null && EF.Functions.ILike(b.Description, $"%{innerTerm}%"))
                     );
                 }
-                predicate = predicate.And(keywordPredicate); 
+                predicate = predicate.And(keywordPredicate);
             }
 
             var books = await booksQuery.Where(predicate)
@@ -229,24 +287,15 @@ namespace BookService.Api.Controllers
                     return Ok(new ChatbotResponse { Answer = "Xin lỗi, không tìm thấy sách nào trong cửa hàng này.", Books = new List<BookInfo>() });
             }
 
-            // Tạo danh sách BookInfo 
-            var bookInfos = books.Select(b => new BookInfo
-            {
-                Id = b.Id,
-                Title = b.Title,
-                BookstoreId = b.BookstoreId, 
-                Price = b.Price, 
-                ImageUrl = b.ImageUrl ?? string.Empty // Xử lý null
-            }).ToList();
+            // ⚠️ KHÔNG CẦN TẠO bookInfos TẠM THỜI NỮA. CHÚNG TA SẼ DỰA VÀO PHẢN HỒI CỦA AI.
 
             // 2️⃣ Tạo context chi tiết (dùng cho prompt)
             string contextData = $"Dữ liệu các sách trong cửa hàng {request.BookstoreId} liên quan đến yêu cầu:\n";
             foreach (var b in books)
             {
-                contextData += $"- **{b.Title}** (ID: {b.Id}, {b.BookType?.Name ?? "Không rõ thể loại"})\n";
+                contextData += $"- **{b.Title}** (ID: {b.Id}, Thể loại: {b.BookType?.Name ?? "Không rõ"})\n";
                 contextData += $"  Tác giả: {b.Author ?? "Không rõ"}\n";
                 contextData += $"  Giá: {b.Price:C}, Số lượng còn: {b.Quantity}\n";
-                contextData += $"  Mô tả: {b.Description ?? "Không có mô tả"}\n";
             }
 
             // 3️⃣ Gửi request đến Gemini
@@ -271,23 +320,23 @@ Người dùng hỏi: {request.Message}
 2.  **Định dạng Sách:** Khi nhắc đến tên sách trong phần trả lời tự nhiên, hãy kèm theo ID của sách đó trong ngoặc vuông (ví dụ: Tên Sách [ID]) để frontend có thể tạo liên kết.
 3.  **Dữ liệu JSON (BẮT BUỘC):** Luôn đính kèm danh sách sách bạn tham chiếu/đề xuất vào cuối phản hồi theo định dạng JSON sau:
 
-    **a. Bắt đầu với:** `----`
-    **b. Dữ liệu:** Một mảng JSON của các đối tượng sách (chỉ chứa Id, Title, BookstoreId). Chỉ bao gồm các sách bạn đã đề cập hoặc tham khảo trong câu trả lời tự nhiên.
-    **c. Kết thúc với:** `----`
+    a. Bắt đầu bằng dòng: `----BOOKS_JSON_START----`
+    b. Dữ liệu: Một mảng JSON của các đối tượng BookInfo (chỉ chứa Id, Title, BookstoreId). **Chỉ bao gồm các sách bạn đã đề cập hoặc tham khảo trong câu trả lời tự nhiên.**
+    c. Kết thúc bằng dòng: `----BOOKS_JSON_END----`
 
-**Ví dụ về JSON Sách:**
-----
+Ví dụ về JSON Sách:
+----BOOKS_JSON_START----
 [
     {{ ""Id"": 101, ""Title"": ""Tên Sách Hay"", ""BookstoreId"": {request.BookstoreId} }},
     {{ ""Id"": 102, ""Title"": ""Sách Tiếp Theo"", ""BookstoreId"": {request.BookstoreId} }}
 ]
-----
+----BOOKS_JSON_END----
 
 Hãy bắt đầu phản hồi của bạn ngay bây giờ.
-"; 
+";
 
             var body = new { contents = new[] { new { parts = new[] { new { text = prompt } } } } };
-            
+
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
             var response = await http.PostAsync(url, new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"));
 
@@ -298,18 +347,47 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
             if (string.IsNullOrEmpty(rawResponseText))
                 return StatusCode(500, new { error = "Không nhận được phản hồi từ AI." });
 
-            // LOGIC PHÂN TÁCH PHẢN HỒI (TÁCH TEXT VÀ JSON)
-            const string startDelimiter = "----";
+            // 4️⃣ LOGIC PHÂN TÁCH PHẢN HỒI (TÁCH TEXT VÀ JSON)
+            const string startDelimiter = "----BOOKS_JSON_START----";
+            const string endDelimiter = "----BOOKS_JSON_END----";
             string naturalAnswer = rawResponseText;
+            List<BookInfo> recommendedBooks = new List<BookInfo>();
 
+            // Tìm và trích xuất JSON
             int startIndex = rawResponseText.IndexOf(startDelimiter);
-            if (startIndex != -1)
+            int endIndex = rawResponseText.IndexOf(endDelimiter, startIndex + startDelimiter.Length);
+
+            if (startIndex != -1 && endIndex != -1)
             {
+                // Lấy phần văn bản trước JSON
                 naturalAnswer = rawResponseText.Substring(0, startIndex).Trim();
+
+                // Trích xuất chuỗi JSON
+                string jsonPart = rawResponseText.Substring(startIndex + startDelimiter.Length, endIndex - (startIndex + startDelimiter.Length)).Trim();
+
+                // Thử deserialize JSON
+                try
+                {
+                    // Loại bỏ bất kỳ ký tự markdown nào mà AI có thể thêm vào
+                    jsonPart = Regex.Replace(jsonPart, @"^```json\s*|```\s*$", string.Empty, RegexOptions.Multiline).Trim();
+
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var deserializedBooks = JsonSerializer.Deserialize<List<BookInfo>>(jsonPart, options);
+
+                    if (deserializedBooks != null)
+                    {
+                        recommendedBooks = deserializedBooks;
+                    }
+                }
+                catch (JsonException ex)
+                {
+                    // Log lỗi nếu JSON không hợp lệ, nhưng vẫn trả về câu trả lời tự nhiên
+                    Console.WriteLine($"Lỗi phân tích JSON từ AI: {ex.Message}");
+                }
             }
 
-            // Trả về dữ liệu cấu trúc (JSON) để hỗ trợ liên kết
-            return Ok(new ChatbotResponse { Answer = naturalAnswer, Books = bookInfos });
+            // Trả về kết quả cho frontend, kèm theo danh sách sách đã được AI đề xuất
+            return Ok(new ChatbotResponse { Answer = naturalAnswer, Books = recommendedBooks });
         }
 
         // --------------------------------------------------------------------------------------
@@ -318,13 +396,13 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
 
         public class StoreChatRequest
         {
-            public string Message { get; set; } = string.Empty; // 👈 Khắc phục CS8618
+            public string Message { get; set; } = string.Empty;
             public int BookstoreId { get; set; }
         }
 
         public class ChatbotResponse
         {
-            public string Answer { get; set; } = string.Empty; // 👈 Khắc phục CS8618
+            public string Answer { get; set; } = string.Empty;
             public List<BookInfo>? Books { get; set; }
         }
 
@@ -334,7 +412,7 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
             public int Id { get; set; }
 
             [JsonPropertyName("title")]
-            public string Title { get; set; } = string.Empty; // 👈 Khắc phục CS8618
+            public string Title { get; set; } = string.Empty;
 
             [JsonPropertyName("bookstoreId")]
             public int BookstoreId { get; set; }
@@ -343,12 +421,12 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
             public decimal Price { get; set; }
 
             [JsonPropertyName("imageUrl")]
-            public string ImageUrl { get; set; } = string.Empty; // 👈 Khắc phục CS8618
+            public string ImageUrl { get; set; } = string.Empty;
         }
 
         public class ChatRequest
         {
-            public string Question { get; set; } = string.Empty; // 👈 Khắc phục CS8618
+            public string Question { get; set; } = string.Empty;
         }
     }
 }
