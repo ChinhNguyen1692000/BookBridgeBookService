@@ -156,7 +156,82 @@ namespace BookService.Api.Controllers
 
             return Ok(new { answer = message });
         }
+
+        [HttpPost("ask/store")]
+        public async Task<IActionResult> AskByStore([FromBody] StoreChatRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Message))
+                return BadRequest("Message cannot be empty");
+
+            if (request.BookstoreId <= 0)
+                return BadRequest("BookstoreId phải lớn hơn 0");
+
+            // 1️⃣ Lọc sách theo bookstoreId
+            var books = await _context.Books
+                .Include(b => b.BookType)
+                .Include(b => b.BookImages)
+                .Where(b => b.BookstoreId == request.BookstoreId)
+                .Take(10) // Giới hạn top 10
+                .ToListAsync();
+
+            if (!books.Any())
+                return Ok(new { answer = "Không tìm thấy sách nào trong cửa hàng này." });
+
+            // 2️⃣ Tạo context chi tiết
+            string contextData = $"Dữ liệu các sách trong cửa hàng {request.BookstoreId}:\n";
+            foreach (var b in books)
+            {
+                contextData += $"- {b.Title} ({b.BookType?.Name ?? "Không rõ thể loại"})\n";
+                contextData += $"  Tác giả: {b.Author ?? "Không rõ"}\n";
+                contextData += $"  Giá: {b.Price:C}, Số lượng còn: {b.Quantity}\n";
+                contextData += $"  Mô tả: {b.Description ?? "Không có mô tả"}\n";
+            }
+
+            // 3️⃣ Gửi request đến Gemini
+            var http = _httpClientFactory.CreateClient();
+            var apiKey = _config["Gemini:ApiKey"];
+            http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "BookBridgeChatbot/1.0");
+            http.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://bookbridgebookservice.onrender.com");
+
+            var body = new
+            {
+                contents = new[]
+                {
+            new
+            {
+                parts = new[]
+                {
+                    new { text = $"{contextData}\n\nNgười dùng hỏi: {request.Message}" }
+                }
+            }
+        }
+            };
+
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
+            var response = await http.PostAsync(
+                url,
+                new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
+            );
+
+            var json = await response.Content.ReadAsStringAsync();
+            var jsonDoc = JsonNode.Parse(json);
+            var message = jsonDoc?["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
+
+            if (string.IsNullOrEmpty(message))
+                return StatusCode(500, new { error = "Không nhận được phản hồi từ AI." });
+
+            return Ok(new { answer = message });
+        }
+
+        // Request model cho bookstore
+        public class StoreChatRequest
+        {
+            public string Message { get; set; }
+            public int BookstoreId { get; set; }
+        }
     }
+
+
 
     public class ChatRequest
     {
