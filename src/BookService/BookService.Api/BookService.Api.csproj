@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="9.0.8" />
+    <!-- ĐÃ SỬA: Hạ cấp LinqKit từ 9.0.8 xuống 8.1.0 để tương thích với EF Core 8.0.17 và .NET 8. -->
+    <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="8.1.0" /> 
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.17">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

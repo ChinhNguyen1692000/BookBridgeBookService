@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using BookService.Infracstructure.DBContext;
 using BookService.Domain.Entities;
 using System.Linq;
-using LinqKit; // 👈 CẦN THƯ VIỆN NÀY ĐỂ DÙNG PredicateBuilder
+using LinqKit; 
 
 namespace BookService.Api.Controllers
 {
@@ -41,60 +41,59 @@ namespace BookService.Api.Controllers
 
             // 1️⃣ LOGIC TÌM KIẾM THEO TỪ KHÓA (FUZZY SEARCH)
             var searchTerms = request.Question.ToLower().Split(new[] { ' ', ',', '.', ';', ':', '?', '!' }, StringSplitOptions.RemoveEmptyEntries)
-                                             .Where(t => t.Length > 2)
+                                             .Where(t => t.Length > 2) 
                                              .Distinct()
                                              .Take(5)
                                              .ToList();
 
             var booksQuery = _context.Books
                 .Include(b => b.BookType)
-                .AsExpandable(); // Bật LinqKit cho truy vấn chính
+                .AsExpandable(); 
 
-            var predicate = PredicateBuilder.New<Book>(true); // Bắt đầu với điều kiện luôn đúng
+            var predicate = PredicateBuilder.New<Book>(true); 
 
             // Xây dựng điều kiện OR dựa trên từ khóa để tìm kiếm linh hoạt
             if (searchTerms.Any())
             {
-                var keywordPredicate = PredicateBuilder.New<Book>(false); // Bắt đầu với điều kiện luôn sai (cho OR)
-
+                var keywordPredicate = PredicateBuilder.New<Book>(false); 
+                
                 foreach (var term in searchTerms)
                 {
-                    var innerTerm = term; // Tạo bản sao để tránh vấn đề đóng (closure issue)
-                    keywordPredicate = keywordPredicate.Or(b =>
+                    var innerTerm = term; 
+                    keywordPredicate = keywordPredicate.Or(b => 
                         EF.Functions.ILike(b.Title, $"%{innerTerm}%") ||
                         (b.Author != null && EF.Functions.ILike(b.Author, $"%{innerTerm}%")) ||
                         (b.BookType != null && EF.Functions.ILike(b.BookType.Name, $"%{innerTerm}%")) ||
                         (b.Description != null && EF.Functions.ILike(b.Description, $"%{innerTerm}%"))
                     );
                 }
-                predicate = predicate.And(keywordPredicate); // Áp dụng điều kiện OR vào truy vấn chính
+                predicate = predicate.And(keywordPredicate); 
             }
-
+            
             var books = await booksQuery.Where(predicate)
-                .OrderByDescending(b => b.AverageRating)
+                .OrderByDescending(b => b.AverageRating) 
                 .ThenByDescending(b => b.RatingsCount)
-                .Take(5)
+                .Take(5) 
                 .ToListAsync();
 
             // Nếu không tìm thấy sách nào dựa trên từ khóa hoặc câu hỏi chung chung (fallback)
             if (!books.Any() && searchTerms.Any() == false)
             {
-                books = await _context.Books
-                   .Include(b => b.BookType)
-                   .OrderByDescending(b => b.RatingsCount)
-                   .Take(5)
-                   .ToListAsync();
+                 books = await _context.Books
+                    .Include(b => b.BookType)
+                    .OrderByDescending(b => b.RatingsCount)
+                    .Take(5)
+                    .ToListAsync();
             }
 
 
-            // Cập nhật: Tạo danh sách BookInfo (CS1061/CS0019 đã sửa)
             var bookInfos = books.Select(b => new BookInfo
             {
                 Id = b.Id,
                 Title = b.Title,
-                BookstoreId = b.BookstoreId, // 👈 Đã sửa lỗi CS1061 và CS0019
-                Price = b.Price,
-                ImageUrl = b.ImageUrl
+                BookstoreId = b.BookstoreId, 
+                Price = b.Price, 
+                ImageUrl = b.ImageUrl ?? string.Empty // Xử lý null
             }).ToList();
 
 
@@ -127,7 +126,7 @@ namespace BookService.Api.Controllers
                     }
                 }
             };
-
+            
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
             var response = await http.PostAsync(
                 url,
@@ -182,21 +181,21 @@ namespace BookService.Api.Controllers
             var booksQuery = _context.Books
                 .Include(b => b.BookType)
                 .Where(b => b.BookstoreId == request.BookstoreId)
-                .AsExpandable(); // Bật LinqKit
+                .AsExpandable(); 
 
-            var predicate = PredicateBuilder.New<Book>(true);
+            var predicate = PredicateBuilder.New<Book>(true); 
 
             // Lọc theo Giá nếu có từ khóa giá
             if (priceSearched)
             {
                 predicate = predicate.And(b => b.Price >= minPrice && b.Price <= maxPrice);
             }
-
+            
             // Lọc theo Từ khóa (FUZZY SEARCH)
             if (searchTerms.Any())
             {
-                var keywordPredicate = PredicateBuilder.New<Book>(false);
-
+                var keywordPredicate = PredicateBuilder.New<Book>(false); 
+                
                 foreach (var term in searchTerms.Take(5))
                 {
                     var innerTerm = term;
@@ -207,7 +206,7 @@ namespace BookService.Api.Controllers
                         (b.Description != null && EF.Functions.ILike(b.Description, $"%{innerTerm}%"))
                     );
                 }
-                predicate = predicate.And(keywordPredicate);
+                predicate = predicate.And(keywordPredicate); 
             }
 
             var books = await booksQuery.Where(predicate)
@@ -230,14 +229,14 @@ namespace BookService.Api.Controllers
                     return Ok(new ChatbotResponse { Answer = "Xin lỗi, không tìm thấy sách nào trong cửa hàng này.", Books = new List<BookInfo>() });
             }
 
-            // Tạo danh sách BookInfo (CS1061/CS0019 đã sửa)
+            // Tạo danh sách BookInfo 
             var bookInfos = books.Select(b => new BookInfo
             {
                 Id = b.Id,
                 Title = b.Title,
-                BookstoreId = b.BookstoreId, // 👈 Đã sửa lỗi CS1061 và CS0019
-                Price = b.Price,
-                ImageUrl = b.ImageUrl
+                BookstoreId = b.BookstoreId, 
+                Price = b.Price, 
+                ImageUrl = b.ImageUrl ?? string.Empty // Xử lý null
             }).ToList();
 
             // 2️⃣ Tạo context chi tiết (dùng cho prompt)
@@ -285,10 +284,10 @@ Người dùng hỏi: {request.Message}
 ----
 
 Hãy bắt đầu phản hồi của bạn ngay bây giờ.
-"; // 👈 Đã sửa lỗi CS1733
+"; 
 
             var body = new { contents = new[] { new { parts = new[] { new { text = prompt } } } } };
-
+            
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
             var response = await http.PostAsync(url, new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"));
 
@@ -316,16 +315,16 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
         // --------------------------------------------------------------------------------------
         // MODELS
         // --------------------------------------------------------------------------------------
-        // (Giữ nguyên phần Models)
+
         public class StoreChatRequest
         {
-            public string Message { get; set; }
+            public string Message { get; set; } = string.Empty; // 👈 Khắc phục CS8618
             public int BookstoreId { get; set; }
         }
 
         public class ChatbotResponse
         {
-            public string Answer { get; set; }
+            public string Answer { get; set; } = string.Empty; // 👈 Khắc phục CS8618
             public List<BookInfo>? Books { get; set; }
         }
 
@@ -335,7 +334,7 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
             public int Id { get; set; }
 
             [JsonPropertyName("title")]
-            public string Title { get; set; }
+            public string Title { get; set; } = string.Empty; // 👈 Khắc phục CS8618
 
             [JsonPropertyName("bookstoreId")]
             public int BookstoreId { get; set; }
@@ -344,12 +343,12 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
             public decimal Price { get; set; }
 
             [JsonPropertyName("imageUrl")]
-            public string ImageUrl { get; set; }
+            public string ImageUrl { get; set; } = string.Empty; // 👈 Khắc phục CS8618
         }
-    }
 
-    public class ChatRequest
-    {
-        public string Question { get; set; }
+        public class ChatRequest
+        {
+            public string Question { get; set; } = string.Empty; // 👈 Khắc phục CS8618
+        }
     }
 }
