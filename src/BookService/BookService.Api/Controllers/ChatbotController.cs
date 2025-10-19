@@ -38,21 +38,21 @@ namespace BookService.Api.Controllers
                 return BadRequest("Question cannot be empty");
 
             // 1️⃣ Lấy dữ liệu chi tiết từ DB (RAG)
+            // LƯU Ý: Không cần Include(b => b.BookImages) vì ImageUrl nằm trực tiếp trên Entity Book.
             var books = await _context.Books
                 .Include(b => b.BookType)
-                .Include(b => b.BookImages)
                 .OrderByDescending(b => b.RatingsCount)
                 .Take(5)
                 .ToListAsync();
 
-            // Cập nhật: Tạo danh sách BookInfo đầy đủ các trường
+            // Cập nhật: Tạo danh sách BookInfo đầy đủ các trường, lấy ImageUrl từ b.ImageUrl
             var bookInfos = books.Select(b => new BookInfo
             {
                 Id = b.Id,
                 Title = b.Title,
-                BookstoreId = b.BookstoreId,
-                Price = b.Price, // Thêm Price
-                ImageUrl = b.BookImages.FirstOrDefault()?.ImageUrl // Thêm ImageUrl đầu tiên
+                BookstoreId = b.BookstoreId, // Không dùng ?? 0 vì nó là int [Required]
+                Price = b.Price,
+                ImageUrl = b.ImageUrl // LẤY TRỰC TIẾP TỪ ENTITY BOOK
             }).ToList();
 
 
@@ -73,7 +73,6 @@ namespace BookService.Api.Controllers
 
             var prompt = $"Bạn là một trợ lý thông minh về sách. Hãy trả lời câu hỏi của người dùng dựa trên ngữ cảnh sau. Khi nhắc đến sách, hãy thêm ID [ID] vào sau tên sách.\n\n{contextData}\n\nNgười dùng hỏi: {request.Question}";
 
-            // ... (Phần gán body và gọi API Gemini) ...
             var body = new
             {
                 contents = new[]
@@ -136,7 +135,7 @@ namespace BookService.Api.Controllers
 
             var query = _context.Books
                 .Include(b => b.BookType)
-                .Include(b => b.BookImages)
+                // LƯU Ý: Không cần Include(b => b.BookImages) vì ImageUrl nằm trực tiếp trên Entity Book.
                 .Where(b => b.BookstoreId == request.BookstoreId);
 
             if (minPrice == 0)
@@ -166,7 +165,6 @@ namespace BookService.Api.Controllers
                 // Nếu không tìm thấy sách, lấy sách phổ biến nhất
                 books = await _context.Books
                     .Include(b => b.BookType)
-                    .Include(b => b.BookImages)
                     .Where(b => b.BookstoreId == request.BookstoreId)
                     .OrderByDescending(b => b.RatingsCount)
                     .Take(5)
@@ -176,14 +174,14 @@ namespace BookService.Api.Controllers
                     return Ok(new ChatbotResponse { Answer = "Xin lỗi, không tìm thấy sách nào trong cửa hàng này.", Books = new List<BookInfo>() });
             }
 
-            // Cập nhật: Tạo danh sách BookInfo đầy đủ các trường
+            // Cập nhật: Tạo danh sách BookInfo đầy đủ các trường, lấy ImageUrl từ b.ImageUrl
             var bookInfos = books.Select(b => new BookInfo
             {
                 Id = b.Id,
                 Title = b.Title,
-                BookstoreId = b.BookstoreId,
-                Price = b.Price, // Thêm Price
-                ImageUrl = b.BookImages.FirstOrDefault()?.ImageUrl // Thêm ImageUrl đầu tiên
+                BookstoreId = b.BookstoreId, // Đã sửa lỗi CS0019 (nếu Entity là int)
+                Price = b.Price,
+                ImageUrl = b.ImageUrl // LẤY TRỰC TIẾP TỪ ENTITY BOOK
             }).ToList();
 
             // 2️⃣ Tạo context chi tiết (dùng cho prompt)
@@ -272,8 +270,6 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
             {
                 // Lấy phần văn bản tự nhiên (phần trước JSON)
                 naturalAnswer = rawResponseText.Substring(0, startIndex).Trim();
-
-                // Giữ nguyên bookInfos từ DB query
             }
 
             // Trả về dữ liệu cấu trúc (JSON) để hỗ trợ liên kết
@@ -310,12 +306,12 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
             [JsonPropertyName("bookstoreId")]
             public int BookstoreId { get; set; }
 
-            // CÁC TRƯỜNG THÊM VÀO
             [JsonPropertyName("price")]
-            public decimal Price { get; set; } // Thêm giá
+            public decimal Price { get; set; }
 
+            // Đổi lại thành string (không null) để khớp với định nghĩa trong Entity Book
             [JsonPropertyName("imageUrl")]
-            public string? ImageUrl { get; set; } // Thêm URL hình ảnh đầu tiên
+            public string ImageUrl { get; set; }
         }
     }
 
