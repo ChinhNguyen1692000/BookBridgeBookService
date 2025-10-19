@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization; // Thêm namespace này cho thuộc tính JSON
 using BookService.Infracstructure.DBContext;
 using BookService.Domain.Entities;
 
@@ -96,8 +97,10 @@ namespace BookService.Api.Controllers
             return Ok(new ChatbotResponse { Answer = message });
         }
 
-        // **Endpoint Ask/Store mới - Gộp chức năng Details và Store**
-        // **URL: /api/chatbot/ask/store**
+        // --------------------------------------------------------------------------------------
+        // CẬP NHẬT ENDPOINT AskByStore
+        // --------------------------------------------------------------------------------------
+
         [HttpPost("ask/store")]
         public async Task<IActionResult> AskByStore([FromBody] StoreChatRequest request)
         {
@@ -117,9 +120,7 @@ namespace BookService.Api.Controllers
             {
                 if (decimal.TryParse(term, out var priceValue))
                 {
-                    // Giả định nếu giá là số nguyên, đó là giá tối thiểu
                     minPrice = priceValue;
-                    // Reset maxPrice để tìm kiếm trong khoảng giá nhất định (nếu cần)
                     maxPrice = decimal.MaxValue;
                     break;
                 }
@@ -131,13 +132,11 @@ namespace BookService.Api.Controllers
                 .Include(b => b.BookImages)
                 .Where(b => b.BookstoreId == request.BookstoreId);
 
-            // Thêm điều kiện tìm kiếm linh hoạt (chỉ tìm kiếm theo Title, Author, TypeName nếu không trích xuất được Price)
             if (minPrice == 0)
             {
                 foreach (var term in searchTerms)
                 {
                     var termTrimmed = term.Trim();
-                    // Tìm kiếm gần đúng/có chứa từ khóa trong Title, Author, hoặc BookType Name
                     query = query.Where(b =>
                         EF.Functions.ILike(b.Title, $"%{termTrimmed}%") ||
                         (b.Author != null && EF.Functions.ILike(b.Author, $"%{termTrimmed}%")) ||
@@ -147,18 +146,17 @@ namespace BookService.Api.Controllers
             }
             else
             {
-                // Lọc theo giá nếu có
                 query = query.Where(b => b.Price >= minPrice && b.Price <= maxPrice);
             }
 
             var books = await query
-                .OrderByDescending(b => b.AverageRating) // Ưu tiên sách có rating cao
-                .Take(10) // Giới hạn top 10 sách liên quan
+                .OrderByDescending(b => b.AverageRating)
+                .Take(10)
                 .ToListAsync();
 
             if (!books.Any())
             {
-                // Nếu không tìm thấy sách nào khớp với từ khóa, lấy sách phổ biến nhất trong store đó
+                // Nếu không tìm thấy sách nào khớp với từ khóa, lấy sách phổ biến nhất
                 books = await _context.Books
                     .Include(b => b.BookType)
                     .Include(b => b.BookImages)
@@ -171,8 +169,13 @@ namespace BookService.Api.Controllers
                     return Ok(new ChatbotResponse { Answer = "Xin lỗi, không tìm thấy sách nào trong cửa hàng này." });
             }
 
-            // Chuẩn bị danh sách BookInfo cho Frontend
-            var bookInfos = books.Select(b => new BookInfo { Id = b.Id, Title = b.Title }).ToList();
+            // Chuẩn bị danh sách BookInfo cho Frontend (Sử dụng dữ liệu từ DB để đảm bảo độ chính xác)
+            var bookInfos = books.Select(b => new BookInfo
+            {
+                Id = b.Id,
+                Title = b.Title,
+                BookstoreId = b.BookstoreId // Giả định BookstoreId không null
+            }).ToList();
 
             // 2️⃣ Tạo context chi tiết
             string contextData = $"Dữ liệu các sách trong cửa hàng {request.BookstoreId} liên quan đến yêu cầu:\n";
@@ -190,8 +193,39 @@ namespace BookService.Api.Controllers
             http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "BookBridgeChatbot/1.0");
             http.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://bookbridgebookservice.onrender.com");
 
-            // Yêu cầu AI trả lời và liệt kê các ID sách trong phần trả lời (có thể ẩn/mô tả trong output)
-            var prompt = $"Dựa vào dữ liệu sách sau trong cửa hàng {request.BookstoreId}:\n\n{contextData}\n\nNgười dùng hỏi: {request.Message}\n\nHãy trả lời một cách tự nhiên và hữu ích. **Đặc biệt, khi bạn nhắc đến tên sách, hãy kèm theo ID của sách đó trong ngoặc vuông (ví dụ: Tên Sách [ID]) để frontend có thể tạo liên kết.** Ví dụ: 'Bạn có thể tham khảo cuốn sách Hay Nhất [101] của tác giả Nguyễn Văn A.'";
+            // ----------------------------------------------------
+            // CẬP NHẬT PROMPT ĐỂ YÊU CẦU STRUCTURED OUTPUT VÀ LINKING
+            // ----------------------------------------------------
+            var prompt = $@"
+Bạn là một trợ lý thông minh có thể truy cập database của hệ thống. 
+Nhiệm vụ của bạn là trả lời người dùng dựa trên ngữ cảnh sách được cung cấp dưới đây, và **luôn luôn** đính kèm dữ liệu sách liên quan dưới dạng JSON theo format bắt buộc.
+
+--- CONTEXT DỮ LIỆU SÁCH ---
+Dữ liệu các sách trong cửa hàng {request.BookstoreId} liên quan đến yêu cầu:
+{contextData}
+--- END CONTEXT ---
+
+Người dùng hỏi: {request.Message}
+
+--- HƯỚNG DẪN TRẢ LỜI ---
+1.  **Phản hồi:** Trả lời một cách tự nhiên, hữu ích và lịch sự, sử dụng tiếng Việt.
+2.  **Định dạng Sách:** Khi nhắc đến tên sách trong phần trả lời tự nhiên, hãy kèm theo ID của sách đó trong ngoặc vuông (ví dụ: Tên Sách [ID]) để frontend có thể tạo liên kết.
+3.  **Dữ liệu JSON (BẮT BUỘC):** Luôn đính kèm danh sách sách bạn tham chiếu/đề xuất vào cuối phản hồi theo định dạng JSON sau:
+
+    **a. Bắt đầu với:** `----`
+    **b. Dữ liệu:** Một mảng JSON của các đối tượng sách (chỉ chứa Id, Title, BookstoreId). Chỉ bao gồm các sách bạn đã đề cập hoặc tham khảo trong câu trả lời tự nhiên.
+    **c. Kết thúc với:** `----`
+
+**Ví dụ về JSON Sách:**
+----
+[
+    {{ ""Id"": 101, ""Title"": ""Tên Sách Hay"", ""BookstoreId"": {request.BookstoreId} }},
+    {{ ""Id"": 102, ""Title"": ""Sách Tiếp Theo"", ""BookstoreId"": {request.BookstoreId} }}
+]
+----
+
+Hãy bắt đầu phản hồi của bạn ngay bây giờ.
+";
 
             var body = new
             {
@@ -215,13 +249,38 @@ namespace BookService.Api.Controllers
 
             var json = await response.Content.ReadAsStringAsync();
             var jsonDoc = JsonNode.Parse(json);
-            var message = jsonDoc?["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
+            var rawResponseText = jsonDoc?["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
 
-            if (string.IsNullOrEmpty(message))
+            if (string.IsNullOrEmpty(rawResponseText))
                 return StatusCode(500, new { error = "Không nhận được phản hồi từ AI." });
 
+            // ----------------------------------------------------
+            // LOGIC PHÂN TÁCH PHẢN HỒI (TÁCH TEXT VÀ JSON)
+            // ----------------------------------------------------
+            const string startDelimiter = "----";
+            const string endDelimiter = "----";
+            string naturalAnswer = rawResponseText;
+
+            int startIndex = rawResponseText.IndexOf(startDelimiter);
+            int endIndex = rawResponseText.LastIndexOf(endDelimiter);
+
+            if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
+            {
+                // Lấy phần văn bản tự nhiên (phần trước JSON)
+                naturalAnswer = rawResponseText.Substring(0, startIndex).Trim();
+
+                // Lấy chuỗi JSON (bỏ qua các dấu phân cách)
+                int jsonStart = startIndex + startDelimiter.Length;
+                int jsonLength = endIndex - jsonStart;
+                string jsonBooksString = rawResponseText.Substring(jsonStart, jsonLength).Trim();
+
+                // (Tùy chọn) Bạn có thể dùng `jsonBooksString` để lọc `bookInfos`
+                // nhưng để đơn giản và an toàn, ta dùng `bookInfos` đã query từ DB.
+            }
+            // Nếu không tìm thấy JSON, naturalAnswer = rawResponseText, và ta vẫn dùng bookInfos.
+
             // 4️⃣ Trả về dữ liệu cấu trúc (JSON) để hỗ trợ liên kết
-            return Ok(new ChatbotResponse { Answer = message, Books = bookInfos });
+            return Ok(new ChatbotResponse { Answer = naturalAnswer, Books = bookInfos });
         }
 
         // Request model cho bookstore
@@ -241,8 +300,14 @@ namespace BookService.Api.Controllers
         // Model chứa thông tin cần thiết để tạo liên kết
         public class BookInfo
         {
+            [JsonPropertyName("Id")]
             public int Id { get; set; }
+
+            [JsonPropertyName("Title")]
             public string Title { get; set; }
+
+            [JsonPropertyName("BookstoreId")]
+            public int BookstoreId { get; set; } // Thêm BookstoreId
         }
     }
 
