@@ -1,5 +1,6 @@
 ﻿using BookService.Application.Interface;
 using BookService.Application.Models;
+using BookService.Domain.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -168,6 +169,16 @@ namespace BookService.Api.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+        [HttpPost("buy")]
+        public async Task<bool> BuyBook(List<BookBuyRefund> request)
+        {
+            return await _service.BuyBook(request);
+        }
+        [HttpPost("refund")]
+        public async Task<bool> RefundBook(List<BookBuyRefund> request)
+        {
+            return await _service.RefundBook(request);
         }
 
     }
