@@ -45,8 +45,10 @@ namespace BookService.Api.Controllers
             }
 
             // 2. Chuẩn bị request đến Gemini API
+
             var http = _httpClientFactory.CreateClient();
-            http.DefaultRequestHeaders.TryAddWithoutValidation("x-goog-api-key", _config["Gemini:ApiKey"]);
+            var apiKey = _config["Gemini:ApiKey"];
+
             http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "BookBridgeChatbot/1.0");
             http.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://bookbridgebookservice.onrender.com");
 
@@ -64,14 +66,18 @@ namespace BookService.Api.Controllers
                 }
             };
 
-            var response = await http.PostAsync(
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
-                new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
+
+            var response = await http.PostAsync
+            (
+            url,
+            new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
             );
 
             var json = await response.Content.ReadAsStringAsync();
             var jsonDoc = JsonNode.Parse(json);
-            var message = jsonDoc?["results"]?[0]?["content"]?.ToString();
+            // var message = jsonDoc?["results"]?[0]?["content"]?.ToString();
+            var message = jsonDoc?["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
 
             if (string.IsNullOrEmpty(message))
             {
