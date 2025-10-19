@@ -13,8 +13,9 @@ namespace BookService.Application.MappingProfile
     {
         public BookImageMappingProfile()
         {
-            CreateMap<BookImageCreateRequest, BookImage>();
-            CreateMap<BookImageUpdateRequest, BookImage>();
+            CreateMap<BookImageCreateRequest, BookImageDTO>();
+            CreateMap<BookImageDTO, BookImage>();
+
 
         }
     }

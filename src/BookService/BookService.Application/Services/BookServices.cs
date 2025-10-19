@@ -14,11 +14,15 @@ namespace BookService.Application.Services
     {
         private readonly BookRepository _repo;
         private readonly IMapper _mapper;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public BookServices(BookRepository repo, IMapper mapper)
+
+        public BookServices(BookRepository repo, IMapper mapper, ICloudinaryService cloudinaryService)
         {
             _repo = repo;
             _mapper = mapper;
+            _cloudinaryService = cloudinaryService;
+
         }
         public async Task<PagedResult<Book>> Search(string? searchValue, int pageNo = 1, int pageSize = 10)
         {
@@ -28,7 +32,7 @@ namespace BookService.Application.Services
         }
         public async Task<PagedResult<Book>> Filter(BookFilterRequest request, int pageNo = 1, int pageSize = 10)
         {
-            var bL = await _repo.Filter(request.typeId, request.price, request.searchValue);
+            var bL = await _repo.Filter(request.TypeId, request.Price, request.SearchValue);
             var bLPaging = PagedResult<Book>.Create(bL, pageNo, pageSize);
             return bLPaging;
         }
@@ -44,23 +48,23 @@ namespace BookService.Application.Services
             return await _repo.GetByIdAsync(id);
         }
 
-        public async Task<Book> CreateAsync(BookCreateRequest request)
+        public async Task<Book> CreateAsync(BookCreateDTO dto)
         {
             var entity = new Book();
-            _mapper.Map(request, entity);
-            entity.CreatedAt = DateTime.Now;
+            _mapper.Map(dto, entity);
+            entity.CreatedAt = DateTime.UtcNow;
             return await _repo.CreateAsync(entity);
         }
 
-        public async Task<Book> UpdateAsync(BookUpdateReuest request)
+        public async Task<Book> UpdateAsync(BookUpdateDTO dto)
         {
-            var exist = await _repo.GetByIdAsync(request.Id);
+            var exist = await _repo.GetByIdAsync(dto.Id);
             if (exist == null)
-            {
                 throw new Exception("Book not found");
-            }
-            _mapper.Map(request, exist);
-            exist.UpdatedAt = DateTime.Now;
+
+            _mapper.Map(dto, exist);
+            exist.UpdatedAt = DateTime.UtcNow;
+
             return await _repo.UpdateAsync(exist);
         }
 

@@ -11,7 +11,8 @@ namespace BookService.Application.Interface
     public interface IBookImageServices
     {
         Task<BookImage> CreateAsync(BookImageCreateRequest request);
-        Task<BookImage> UpdateAsync(BookImageUpdateRequest request);
+
+        Task<BookImage> UpdateAsync(int id, Microsoft.AspNetCore.Http.IFormFile imageFile);
 
         Task<bool> DeleteAsync(int id);
 

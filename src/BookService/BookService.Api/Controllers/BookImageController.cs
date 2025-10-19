@@ -37,19 +37,25 @@ namespace BookService.Api.Controllers
 
         // POST: api/BookImage
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] BookImageCreateRequest request)
+        public async Task<IActionResult> Create([FromForm] BookImageCreateRequest request)
         {
+            if (request.ImageFile == null)
+                return BadRequest("Image file is required.");
+
             var created = await _service.CreateAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            return Ok(created);
         }
 
         // PUT: api/BookImage/{id}
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] BookImageUpdateRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromForm] IFormFile imageFile)
         {
+            if (imageFile == null)
+                return BadRequest("Image file is required.");
+
             try
             {
-                var updated = await _service.UpdateAsync(request);
+                var updated = await _service.UpdateAsync(id, imageFile);
                 return Ok(updated);
             }
             catch (System.Exception ex)

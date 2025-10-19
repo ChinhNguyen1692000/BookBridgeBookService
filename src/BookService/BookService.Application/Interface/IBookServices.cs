@@ -20,8 +20,8 @@ namespace BookService.Application.Interface
 
         Task<Book> GetByIdAsync(int id);
 
-        Task<Book> CreateAsync(BookCreateRequest request);
-        Task<Book> UpdateAsync(BookUpdateReuest request);
+        Task<Book> CreateAsync(BookCreateDTO dto);
+        Task<Book> UpdateAsync(BookUpdateDTO dto);
 
         Task<bool> Remove(int id);
         Task<bool> Active(int id);

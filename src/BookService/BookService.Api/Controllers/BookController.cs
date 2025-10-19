@@ -10,10 +10,12 @@ namespace BookService.Api.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookServices _service;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public BookController(IBookServices service)
+        public BookController(IBookServices service, ICloudinaryService cloudinaryService)
         {
             _service = service;
+            _cloudinaryService = cloudinaryService;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int pageNo = 1, [FromQuery] int pageSize = 10)
@@ -31,20 +33,71 @@ namespace BookService.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] BookCreateRequest request)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Create([FromForm] BookCreateRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var created = await _service.CreateAsync(request);
+
+            string? imageUrl = null;
+            if (request.ImageFile != null)
+                imageUrl = await _cloudinaryService.UploadImageAsync(request.ImageFile);
+
+            var dto = new BookCreateDTO
+            {
+                ISBN = request.ISBN,
+                BookstoreId = request.BookstoreId,
+                Title = request.Title,
+                Author = request.Author,
+                Translator = request.Translator,
+                Quantity = request.Quantity,
+                Publisher = request.Publisher,
+                PublishedDate = request.PublishedDate,
+                Price = request.Price,
+                Language = request.Language,
+                Description = request.Description,
+                PageCount = request.PageCount,
+                TypeId = request.TypeId,
+                ImageUrl = imageUrl
+            };
+
+            var created = await _service.CreateAsync(dto);
             return Ok(created);
         }
 
+
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] BookUpdateReuest request)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update([FromForm] BookUpdateRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            string? imageUrl = null;
+            if (request.ImageFile != null)
+                imageUrl = await _cloudinaryService.UploadImageAsync(request.ImageFile);
+
+            var dto = new BookUpdateDTO
+            {
+                Id = request.Id,
+                ISBN = request.ISBN,
+                BookstoreId = request.BookstoreId,
+                Title = request.Title,
+                Author = request.Author,
+                Translator = request.Translator,
+                Quantity = request.Quantity,
+                Publisher = request.Publisher,
+                PublishedDate = request.PublishedDate,
+                Price = request.Price,
+                Language = request.Language,
+                Description = request.Description,
+                PageCount = request.PageCount,
+                TypeId = request.TypeId,
+                ImageUrl = imageUrl
+            };
+
             try
             {
-                var updated = await _service.UpdateAsync(request);
+                var updated = await _service.UpdateAsync(dto);
                 return Ok(updated);
             }
             catch (Exception ex)

@@ -3,6 +3,7 @@ using BookService.Application.Interface;
 using BookService.Application.Models;
 using BookService.Domain.Entities;
 using BookService.Infracstructure.Repositories;
+using Microsoft.AspNetCore.Http;
 namespace BookService.Application.Services
 {
     public class BookImageServices : IBookImageServices
@@ -10,28 +11,47 @@ namespace BookService.Application.Services
         private readonly BookImageRepository _repo;
         private readonly IMapper _mapper;
 
-        public BookImageServices(BookImageRepository repo, IMapper mapper)
+        private readonly ICloudinaryService _cloudinaryService;
+
+
+        public BookImageServices(BookImageRepository repo, IMapper mapper, ICloudinaryService cloudinaryService)
         {
             _repo = repo;
             _mapper = mapper;
+            _cloudinaryService = cloudinaryService;
+
         }
 
         public async Task<BookImage> CreateAsync(BookImageCreateRequest request)
         {
+            string imageUrl = null;
+            if (request.ImageFile != null)
+            {
+                imageUrl = await _cloudinaryService.UploadImageAsync(request.ImageFile);
+            }
+
             var entity = _mapper.Map<BookImage>(request);
-            entity.UploadedAt = DateTime.Now;
-            return await _repo.CreateAsync(entity);
+            entity.ImageUrl = imageUrl;
+            entity.UploadedAt = DateTime.UtcNow;
+
+            var created = await _repo.CreateAsync(entity);
+            return created;
         }
 
-        public async Task<BookImage> UpdateAsync(BookImageUpdateRequest request)
+        public async Task<BookImage> UpdateAsync(int id, IFormFile imageFile)
         {
-            var entity = await _repo.GetByIdAsync(request.Id);
+            var entity = await _repo.GetByIdAsync(id);
             if (entity == null)
-                throw new Exception($"BookImage not found");
+                throw new Exception("BookImage not found");
 
-            _mapper.Map(request, entity);
-            entity.UploadedAt = DateTime.Now;
-            return await _repo.UpdateAsync(entity);
+            if (imageFile != null)
+            {
+                entity.ImageUrl = await _cloudinaryService.UploadImageAsync(imageFile);
+                entity.UploadedAt = DateTime.UtcNow;
+            }
+
+            var updated = await _repo.UpdateAsync(entity);
+            return updated;
         }
 
         public async Task<bool> DeleteAsync(int id)

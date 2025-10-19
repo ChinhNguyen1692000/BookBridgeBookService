@@ -31,6 +31,7 @@ builder.Services.AddScoped<IBookServices, BookServices>();
 builder.Services.AddScoped<BookImageRepository>();
 builder.Services.AddScoped<BookRepository>();
 builder.Services.AddScoped<BookTypeRepository>();
+builder.Services.AddSingleton<ICloudinaryService, CloudinaryService>();
 // builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddHttpClient();

@@ -13,8 +13,8 @@ namespace BookService.Application.MappingProfile
     {
         public BookMappingProfile()
         {
-            CreateMap<BookCreateRequest, Book>();
-            CreateMap<BookUpdateReuest, Book>()
+            CreateMap<BookCreateDTO, Book>();
+            CreateMap<BookUpdateDTO, Book>()
     .ForMember(b => b.IsActive, ac => ac.Ignore())
     .ForMember(b => b.RatingsCount, ac => ac.Ignore())
     .ForMember(b => b.AverageRating, ac => ac.Ignore());

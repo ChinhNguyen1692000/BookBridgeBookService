@@ -488,6 +488,7 @@ E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookServic
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\BookService.Api.pdb
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\AutoMapper.dll
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\CloudinaryDotNet.dll
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\Humanizer.dll
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
@@ -514,6 +515,7 @@ E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookServic
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\Microsoft.OpenApi.dll
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\Mono.TextTemplating.dll
+E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\Newtonsoft.Json.dll
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\Npgsql.dll
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Api\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
