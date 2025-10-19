@@ -276,7 +276,7 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
                 // Giữ nguyên bookInfos từ DB query
             }
 
-            // 4️⃣ Trả về dữ liệu cấu trúc (JSON) để hỗ trợ liên kết
+            // Trả về dữ liệu cấu trúc (JSON) để hỗ trợ liên kết
             return Ok(new ChatbotResponse { Answer = naturalAnswer, Books = bookInfos });
         }
 
@@ -301,20 +301,20 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.
         // Model chứa thông tin cần thiết để tạo liên kết và hiển thị
         public class BookInfo
         {
-            [JsonPropertyName("Id")]
+            [JsonPropertyName("id")]
             public int Id { get; set; }
 
-            [JsonPropertyName("Title")]
+            [JsonPropertyName("title")]
             public string Title { get; set; }
 
-            [JsonPropertyName("BookstoreId")]
+            [JsonPropertyName("bookstoreId")]
             public int BookstoreId { get; set; }
 
             // CÁC TRƯỜNG THÊM VÀO
-            [JsonPropertyName("Price")]
+            [JsonPropertyName("price")]
             public decimal Price { get; set; } // Thêm giá
 
-            [JsonPropertyName("ImageUrl")]
+            [JsonPropertyName("imageUrl")]
             public string? ImageUrl { get; set; } // Thêm URL hình ảnh đầu tiên
         }
     }
