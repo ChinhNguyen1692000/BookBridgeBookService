@@ -19,5 +19,5 @@ RUN dotnet publish "src/BookService/BookService.Api/BookService.Api.csproj" -c R
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:${PORT}
 ENTRYPOINT ["dotnet", "BookService.Api.dll"]
