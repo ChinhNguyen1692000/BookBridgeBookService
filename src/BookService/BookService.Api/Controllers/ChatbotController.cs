@@ -54,6 +54,9 @@ namespace BookService.Api.Controllers
             _config = config;
         }
 
+        [HttpGet("/api/healthz")] // <-- Change: Explicitly set the absolute path
+        public IActionResult HealthCheck() => Ok("Healthy");
+
         [HttpGet("ping")]
         public IActionResult Ping() => Ok("Chatbot API is alive!");
 
