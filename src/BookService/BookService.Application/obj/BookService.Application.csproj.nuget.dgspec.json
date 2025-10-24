@@ -29,8 +29,8 @@
               "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
                 "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj"
               },
-              "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj": {
-                "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj"
+              "e:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj": {
+                "projectPath": "e:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj"
               },
               "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj": {
                 "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj"
@@ -60,6 +60,14 @@
             "Microsoft.AspNetCore.Http.Abstractions": {
               "target": "Package",
               "version": "[2.2.0, )"
+            },
+            "StackExchange.Redis": {
+              "target": "Package",
+              "version": "[2.9.25, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.14.0, )"
             }
           },
           "imports": [
@@ -140,14 +148,14 @@
         }
       }
     },
-    "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj": {
+    "e:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
+        "projectUniqueName": "e:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
         "projectName": "BookService.Infrastructure",
-        "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
+        "projectPath": "e:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\Chinh\\.nuget\\packages\\",
-        "outputPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\obj\\",
+        "outputPath": "e:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Chinh\\AppData\\Roaming\\NuGet\\NuGet.Config"

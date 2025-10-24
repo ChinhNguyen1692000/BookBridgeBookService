@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BookstoreService\BookstoreService.Domain\BookstoreService.Domain.csproj" />
     <ProjectReference Include="..\..\Common\Common.csproj" />
     <ProjectReference Include="..\BookService.Domain\BookService.Domain.csproj" />
   </ItemGroup>
