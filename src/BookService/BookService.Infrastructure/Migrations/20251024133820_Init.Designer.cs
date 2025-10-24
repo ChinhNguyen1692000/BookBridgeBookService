@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookService.Infrastructure.Migrations
 {
     [DbContext(typeof(BookDBContext))]
-    [Migration("20251021044943_AddChatEntitiesVFinal")]
-    partial class AddChatEntitiesVFinal
+    [Migration("20251024133820_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
