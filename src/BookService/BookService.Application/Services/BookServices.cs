@@ -52,8 +52,10 @@ namespace BookService.Application.Services
         {
             var entity = new Book();
             _mapper.Map(dto, entity);
+
             if (entity.PublishedDate.HasValue)
-                entity.PublishedDate = DateTime.SpecifyKind(entity.PublishedDate.Value, DateTimeKind.Unspecified);
+                entity.PublishedDate = DateTime.SpecifyKind(entity.PublishedDate.Value, DateTimeKind.Utc);
+        
             entity.CreatedAt = DateTime.UtcNow;
             return await _repo.CreateAsync(entity);
         }

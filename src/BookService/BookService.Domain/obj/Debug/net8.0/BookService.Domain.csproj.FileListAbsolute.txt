@@ -46,3 +46,15 @@ E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookServic
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\refint\BookService.Domain.dll
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\BookService.Domain.pdb
 E:\My githhub repo(UserSerivce)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\ref\BookService.Domain.dll
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\bin\Debug\net8.0\BookService.Domain.deps.json
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\bin\Debug\net8.0\BookService.Domain.dll
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\bin\Debug\net8.0\BookService.Domain.pdb
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\BookService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\BookService.Domain.AssemblyInfoInputs.cache
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\BookService.Domain.AssemblyInfo.cs
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\BookService.Domain.csproj.CoreCompileInputs.cache
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\BookService.Domain.sourcelink.json
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\BookService.Domain.dll
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\refint\BookService.Domain.dll
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\BookService.Domain.pdb
+E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Domain\obj\Debug\net8.0\ref\BookService.Domain.dll

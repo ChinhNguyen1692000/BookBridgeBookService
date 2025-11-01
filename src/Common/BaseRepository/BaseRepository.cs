@@ -28,15 +28,33 @@ namespace Common.Infrastructure.Repositories
             return await _dbSet.ToListAsync();
         }
 
-  
+
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
+            // Force all DateTime -> UTC
+            foreach (var prop in typeof(TEntity).GetProperties())
+            {
+                if (prop.PropertyType == typeof(DateTime))
+                {
+                    var value = (DateTime)prop.GetValue(entity);
+                    if (value.Kind == DateTimeKind.Unspecified)
+                        prop.SetValue(entity, DateTime.SpecifyKind(value, DateTimeKind.Utc));
+                }
+                else if (prop.PropertyType == typeof(DateTime?))
+                {
+                    var value = (DateTime?)prop.GetValue(entity);
+                    if (value.HasValue && value.Value.Kind == DateTimeKind.Unspecified)
+                        prop.SetValue(entity, DateTime.SpecifyKind(value.Value, DateTimeKind.Utc));
+                }
+            }
+
             _dbSet.Add(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
 
-    
+
+
         public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             _dbSet.Update(entity);
@@ -44,7 +62,7 @@ namespace Common.Infrastructure.Repositories
             return entity;
         }
 
-     
+
         public virtual async Task<bool> DeleteAsync(TEntity entity)
         {
             _dbSet.Remove(entity);

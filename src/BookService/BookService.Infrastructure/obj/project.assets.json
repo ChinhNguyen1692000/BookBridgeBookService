@@ -2901,11 +2901,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
+      "projectUniqueName": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
       "projectName": "BookService.Infrastructure",
-      "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
+      "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\Chinh\\.nuget\\packages\\",
-      "outputPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\obj\\",
+      "outputPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Chinh\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -2920,11 +2920,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
-              "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj"
+            "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
+              "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj"
             },
-            "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj": {
-              "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj"
+            "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\Common\\Common.csproj": {
+              "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\Common\\Common.csproj"
             }
           }
         }
@@ -2996,13 +2996,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Error occurred while getting package vulnerability data: The download of 'https://api.nuget.org/v3-vulnerabilities/2025.10.24.05.34.12/vulnerability.base.json' timed out because no data was received for 60000ms."
-    }
-  ]
+  }
 }

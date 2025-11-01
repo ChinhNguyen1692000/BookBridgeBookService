@@ -7,9 +7,9 @@ using BookService.Infracstructure.DBContext;
 using BookService.Domain.Entities;
 using LinqKit;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Authorization; // Giữ lại
-using System.Security.Claims; // Giữ lại
-using System.IdentityModel.Tokens.Jwt; // Giữ lại
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt; 
 
 
 namespace BookService.Api.Controllers
@@ -17,7 +17,7 @@ namespace BookService.Api.Controllers
     // --- DTOs ĐẦU VÀO VÀ ĐẦU RA ---
     public class ChatRequest
     {
-        // SessionId đã bị xóa khỏi đây
+        // SessionId đã cmt
         public string Question { get; set; }
     }
 
@@ -34,7 +34,7 @@ namespace BookService.Api.Controllers
     {
         public string Answer { get; set; }
         public List<BookInfo> Books { get; set; }
-        public int SessionId { get; set; } // Vẫn trả về SessionId cho client (tùy chọn)
+        public int SessionId { get; set; } // Vẫn trả về SessionId cho client
     }
     // -------------------------------------------------------------------
 
@@ -54,10 +54,10 @@ namespace BookService.Api.Controllers
             _config = config;
         }
 
-        [HttpGet("/api/healthz")] // <-- Change: Explicitly set the absolute path
+        [HttpGet("/api/healthz")] // <-- Render check health
         public IActionResult HealthCheck() => Ok("Healthy");
 
-        [HttpGet("ping")]
+        [HttpGet("ping")] // <-- Check health for chatbot
         public IActionResult Ping() => Ok("Chatbot API is alive!");
 
         // =========================================================================
@@ -72,9 +72,7 @@ namespace BookService.Api.Controllers
             return keywords.Any(keyword => normalizedQuestion.Contains(keyword));
         }
 
-        /// <summary>
-        /// Tìm session gần nhất của User hoặc tạo session mới (cho user hoặc guest).
-        /// </summary>
+        // Tìm session gần nhất của User hoặc tạo session mới (cho user hoặc guest).
         private async Task<int> GetOrCreateSessionId(Guid? userId = null, int? bookstoreId = null)
         {
             BookService.Domain.Entities.ChatSession session = null;
@@ -111,9 +109,7 @@ namespace BookService.Api.Controllers
             return session.Id; // Trả về ID của session tìm thấy hoặc vừa tạo
         }
 
-        /// <summary>
-        /// Tải lịch sử tin nhắn của Session.
-        /// </summary>
+        // Tải lịch sử tin nhắn của Session.
         private async Task<string> LoadChatHistory(int sessionId, bool loadAll = false)
         {
             var query = _context.ChatMessages
@@ -143,9 +139,8 @@ namespace BookService.Api.Controllers
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Lưu tin nhắn mới vào database.
-        /// </summary>
+
+        // Lưu tin nhắn mới vào database.
         private async Task SaveChatMessage(int sessionId, string sender, string content)
         {
             var message = new BookService.Domain.Entities.ChatMessage
@@ -163,14 +158,14 @@ namespace BookService.Api.Controllers
         //                                 ENDPOINTS
         // =========================================================================
 
-        // [Authorize] // <-- Vẫn tắt để test
+        // [Authorize] // <-- Test xong thì bật lại
         [HttpPost("ask")]
         public async Task<IActionResult> Ask([FromBody] ChatRequest request) // sessionId đã bị xóa khỏi đây
         {
             if (string.IsNullOrWhiteSpace(request.Question))
                 return BadRequest("Question cannot be empty");
 
-            // 1. TRÍCH XUẤT THÔNG TIN (NẾU CÓ)
+            // 1. TRÍCH XUẤT THÔNG TIN
             Guid? userId = null;
             string userRole = "Guest";
             string userName = "Bạn";
@@ -224,7 +219,7 @@ namespace BookService.Api.Controllers
             var http = _httpClientFactory.CreateClient();
             var apiKey = _config["Gemini:ApiKey"];
             http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "BookBridgeChatbot/1.0");
-            http.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://bookbridgebookservice.onrender.com");
+            http.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "https://bookbridgebookservicev2.onrender.com");
             var prompt = $@"
 Bạn là một nữ trợ lý thông minh về sách.
 Hãy trả lời câu hỏi của người dùng dựa trên ngữ cảnh sách được cung cấp dưới đây.
@@ -267,7 +262,7 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.";
                 return StatusCode(500, new { error = "Không nhận được phản hồi từ AI." });
             }
 
-            // LOGIC PHÂN TÁCH PHẢN HỒI (Giữ nguyên)
+            // LOGIC PHÂN TÁCH PHẢN HỒI
             const string startDelimiter = "----BOOKS_JSON_START----";
             const string endDelimiter = "----BOOKS_JSON_END----";
             string naturalAnswer = rawResponseText;
@@ -289,7 +284,7 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.";
             }
             // -------------------------------------------------
 
-            // TÁI TRUY VẤN DATABASE (Giữ nguyên)
+            // TÁI TRUY VẤN DATABASE
             if (recommendedBooks.Any())
             {
                 var recommendedBookIds = recommendedBooks.Select(b => b.Id).ToList();
@@ -298,12 +293,12 @@ Hãy bắt đầu phản hồi của bạn ngay bây giờ.";
             } else if (recommendedBooks.Count == 0 && startIndex != -1) {} else { recommendedBooks = new List<BookInfo>(); }
             // -------------------------------------------------
 
-            // LƯU TRỮ TIN NHẮN MỚI (Giữ nguyên)
+            // LƯU TRỮ TIN NHẮN MỚI
             await SaveChatMessage(sessionId, $"{userName} ({userRole})", request.Question);
             await SaveChatMessage(sessionId, "AI", naturalAnswer);
             // -------------------------------------------------
 
-            // Trả về kết quả cho frontend
+            // Trả về kết quả cho client
             return Ok(new ChatbotResponse { Answer = naturalAnswer, Books = recommendedBooks, SessionId = sessionId });
         }
     }

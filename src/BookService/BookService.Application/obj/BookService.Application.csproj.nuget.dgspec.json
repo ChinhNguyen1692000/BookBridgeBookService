@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Application\\BookService.Application.csproj": {}
+    "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Application\\BookService.Application.csproj": {}
   },
   "projects": {
-    "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Application\\BookService.Application.csproj": {
+    "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Application\\BookService.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Application\\BookService.Application.csproj",
+        "projectUniqueName": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Application\\BookService.Application.csproj",
         "projectName": "BookService.Application",
-        "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Application\\BookService.Application.csproj",
+        "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Application\\BookService.Application.csproj",
         "packagesPath": "C:\\Users\\Chinh\\.nuget\\packages\\",
-        "outputPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Application\\obj\\",
+        "outputPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Chinh\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -26,14 +26,14 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
-                "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj"
+              "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
+                "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj"
               },
-              "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj": {
-                "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj"
+              "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj": {
+                "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj"
               },
-              "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj": {
-                "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj"
+              "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\Common\\Common.csproj": {
+                "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\Common\\Common.csproj"
               }
             }
           }
@@ -90,14 +90,14 @@
         }
       }
     },
-    "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
+    "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj",
+        "projectUniqueName": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj",
         "projectName": "BookService.Domain",
-        "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj",
+        "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj",
         "packagesPath": "C:\\Users\\Chinh\\.nuget\\packages\\",
-        "outputPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\obj\\",
+        "outputPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Chinh\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -148,14 +148,14 @@
         }
       }
     },
-    "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj": {
+    "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
+        "projectUniqueName": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
         "projectName": "BookService.Infrastructure",
-        "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
+        "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\BookService.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\Chinh\\.nuget\\packages\\",
-        "outputPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\obj\\",
+        "outputPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Chinh\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -170,11 +170,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
-                "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj"
+              "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj": {
+                "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Domain\\BookService.Domain.csproj"
               },
-              "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj": {
-                "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj"
+              "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\Common\\Common.csproj": {
+                "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\Common\\Common.csproj"
               }
             }
           }
@@ -247,14 +247,14 @@
         }
       }
     },
-    "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj": {
+    "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\Common\\Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj",
+        "projectUniqueName": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\Common\\Common.csproj",
         "projectName": "Common",
-        "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\Common.csproj",
+        "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\Common\\Common.csproj",
         "packagesPath": "C:\\Users\\Chinh\\.nuget\\packages\\",
-        "outputPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\Common\\obj\\",
+        "outputPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Chinh\\AppData\\Roaming\\NuGet\\NuGet.Config"

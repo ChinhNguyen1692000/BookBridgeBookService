@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\BookService.Message.csproj": {}
+    "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\BookService.Message.csproj": {}
   },
   "projects": {
-    "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\BookService.Message.csproj": {
+    "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\BookService.Message.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\BookService.Message.csproj",
+        "projectUniqueName": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\BookService.Message.csproj",
         "projectName": "BookService.Message",
-        "projectPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\BookService.Message.csproj",
+        "projectPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\BookService.Message.csproj",
         "packagesPath": "C:\\Users\\Chinh\\.nuget\\packages\\",
-        "outputPath": "E:\\My githhub repo(UserSerivce)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\obj\\",
+        "outputPath": "E:\\My githhub repo(All Micro Serivces)\\BookBridgeBookService\\src\\BookService\\BookService.Message\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Chinh\\AppData\\Roaming\\NuGet\\NuGet.Config"
