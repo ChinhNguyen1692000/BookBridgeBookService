@@ -17,10 +17,10 @@ namespace BookService.Domain.Entities
         public int? BookstoreId { get; set; }
 
         [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Gán giá trị mặc định
+        public DateTime CreatedAt { get; set; }
 
         [Required]
-        public DateTime LastActive { get; set; } = DateTime.UtcNow; // Gán giá trị mặc định
+        public DateTime LastActive { get; set; }
 
         // Navigation Property: Lịch sử tin nhắn của phiên này
         public virtual ICollection<ChatMessage> Messages { get; set; } = new List<ChatMessage>();

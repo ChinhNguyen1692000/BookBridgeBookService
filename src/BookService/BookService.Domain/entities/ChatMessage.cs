@@ -25,7 +25,7 @@ namespace BookService.Domain.Entities
         public string Content { get; set; }
 
         [Required]
-        public DateTime Timestamp { get; set; } = DateTime.UtcNow; // Gán giá trị mặc định
+        public DateTime Timestamp { get; set; }
 
         // Navigation Property
         [JsonIgnore]
