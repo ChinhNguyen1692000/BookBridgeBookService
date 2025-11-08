@@ -17,6 +17,6 @@ namespace BookService.Application.Interface
         Task<bool> DeleteAsync(int id);
 
         Task<IEnumerable<BookImage>> GetAllAsync();
-        Task<BookImage> GetByBookIdAsync(int bookId);
+        Task<List<BookImage>> GetByBookIdAsync(int bookId);
     }
 }

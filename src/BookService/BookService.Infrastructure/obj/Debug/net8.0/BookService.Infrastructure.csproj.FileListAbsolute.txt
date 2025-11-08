@@ -60,3 +60,23 @@ E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\Boo
 E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.pdb
 E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.genruntimeconfig.cache
 E:\My githhub repo(All Micro Serivces)\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\ref\BookService.Infrastructure.dll
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\bin\Debug\net8.0\BookService.Infrastructure.deps.json
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\bin\Debug\net8.0\BookService.Infrastructure.runtimeconfig.json
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\bin\Debug\net8.0\BookService.Infrastructure.dll
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\bin\Debug\net8.0\BookService.Infrastructure.pdb
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\bin\Debug\net8.0\BookService.Domain.dll
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\bin\Debug\net8.0\Common.dll
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\bin\Debug\net8.0\Common.pdb
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\bin\Debug\net8.0\BookService.Domain.pdb
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.csproj.AssemblyReference.cache
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.AssemblyInfoInputs.cache
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.AssemblyInfo.cs
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.csproj.CoreCompileInputs.cache
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.sourcelink.json
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookServ.E10EE506.Up2Date
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.dll
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\refint\BookService.Infrastructure.dll
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.pdb
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\BookService.Infrastructure.genruntimeconfig.cache
+D:\LapTrinh\PRM_BOOK\bookbridge-book\BookBridgeBookService\src\BookService\BookService.Infrastructure\obj\Debug\net8.0\ref\BookService.Infrastructure.dll

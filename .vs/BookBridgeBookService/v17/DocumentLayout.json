@@ -1,0 +1,148 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\LapTrinh\\PRM_BOOK\\bookbridge-book\\BookBridgeBookService\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{46C7EB0F-3B59-464C-B12C-9909BC394FE0}|src\\BookService\\BookService.Application\\BookService.Application.csproj|d:\\laptrinh\\prm_book\\bookbridge-book\\bookbridgebookservice\\src\\bookservice\\bookservice.application\\interface\\ibookimageservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{46C7EB0F-3B59-464C-B12C-9909BC394FE0}|src\\BookService\\BookService.Application\\BookService.Application.csproj|solutionrelative:src\\bookservice\\bookservice.application\\interface\\ibookimageservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{46C7EB0F-3B59-464C-B12C-9909BC394FE0}|src\\BookService\\BookService.Application\\BookService.Application.csproj|d:\\laptrinh\\prm_book\\bookbridge-book\\bookbridgebookservice\\src\\bookservice\\bookservice.application\\services\\bookimageservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{46C7EB0F-3B59-464C-B12C-9909BC394FE0}|src\\BookService\\BookService.Application\\BookService.Application.csproj|solutionrelative:src\\bookservice\\bookservice.application\\services\\bookimageservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB822DF2-2DA9-441F-A493-C91F25C19F31}|src\\BookService\\BookService.Api\\BookService.Api.csproj|d:\\laptrinh\\prm_book\\bookbridge-book\\bookbridgebookservice\\src\\bookservice\\bookservice.api\\controllers\\bookimagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB822DF2-2DA9-441F-A493-C91F25C19F31}|src\\BookService\\BookService.Api\\BookService.Api.csproj|solutionrelative:src\\bookservice\\bookservice.api\\controllers\\bookimagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{46C7EB0F-3B59-464C-B12C-9909BC394FE0}|src\\BookService\\BookService.Application\\BookService.Application.csproj|d:\\laptrinh\\prm_book\\bookbridge-book\\bookbridgebookservice\\src\\bookservice\\bookservice.application\\services\\bookservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{46C7EB0F-3B59-464C-B12C-9909BC394FE0}|src\\BookService\\BookService.Application\\BookService.Application.csproj|solutionrelative:src\\bookservice\\bookservice.application\\services\\bookservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "IBookImageServices.cs",
+              "DocumentMoniker": "D:\\LapTrinh\\PRM_BOOK\\bookbridge-book\\BookBridgeBookService\\src\\BookService\\BookService.Application\\Interface\\IBookImageServices.cs",
+              "RelativeDocumentMoniker": "src\\BookService\\BookService.Application\\Interface\\IBookImageServices.cs",
+              "ToolTip": "D:\\LapTrinh\\PRM_BOOK\\bookbridge-book\\BookBridgeBookService\\src\\BookService\\BookService.Application\\Interface\\IBookImageServices.cs",
+              "RelativeToolTip": "src\\BookService\\BookService.Application\\Interface\\IBookImageServices.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-08T03:17:39.564Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BookImageController.cs",
+              "DocumentMoniker": "D:\\LapTrinh\\PRM_BOOK\\bookbridge-book\\BookBridgeBookService\\src\\BookService\\BookService.Api\\Controllers\\BookImageController.cs",
+              "RelativeDocumentMoniker": "src\\BookService\\BookService.Api\\Controllers\\BookImageController.cs",
+              "ToolTip": "D:\\LapTrinh\\PRM_BOOK\\bookbridge-book\\BookBridgeBookService\\src\\BookService\\BookService.Api\\Controllers\\BookImageController.cs",
+              "RelativeToolTip": "src\\BookService\\BookService.Api\\Controllers\\BookImageController.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAQwCAAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-08T03:17:44.427Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BookServices.cs",
+              "DocumentMoniker": "D:\\LapTrinh\\PRM_BOOK\\bookbridge-book\\BookBridgeBookService\\src\\BookService\\BookService.Application\\Services\\BookServices.cs",
+              "RelativeDocumentMoniker": "src\\BookService\\BookService.Application\\Services\\BookServices.cs",
+              "ToolTip": "D:\\LapTrinh\\PRM_BOOK\\bookbridge-book\\BookBridgeBookService\\src\\BookService\\BookService.Application\\Services\\BookServices.cs",
+              "RelativeToolTip": "src\\BookService\\BookService.Application\\Services\\BookServices.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAA7wEUAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-08T03:07:31.156Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BookImageServices.cs",
+              "DocumentMoniker": "D:\\LapTrinh\\PRM_BOOK\\bookbridge-book\\BookBridgeBookService\\src\\BookService\\BookService.Application\\Services\\BookImageServices.cs",
+              "RelativeDocumentMoniker": "src\\BookService\\BookService.Application\\Services\\BookImageServices.cs",
+              "ToolTip": "D:\\LapTrinh\\PRM_BOOK\\bookbridge-book\\BookBridgeBookService\\src\\BookService\\BookService.Application\\Services\\BookImageServices.cs",
+              "RelativeToolTip": "src\\BookService\\BookService.Application\\Services\\BookImageServices.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-08T02:50:23.364Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 168,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:15:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 119,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:4:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:5:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:6:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:7:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

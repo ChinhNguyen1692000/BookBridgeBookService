@@ -27,10 +27,10 @@ namespace BookService.Api.Controllers
         }
 
         // GET: api/BookImage/{id}
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{bookId}")]
+        public async Task<IActionResult> GetById(int bookId)
         {
-            var image = await _service.GetByBookIdAsync(id);
+            var image = await _service.GetByBookIdAsync(bookId);
             if (image == null) return NotFound();
             return Ok(image);
         }

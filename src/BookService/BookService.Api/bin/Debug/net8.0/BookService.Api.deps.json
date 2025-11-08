@@ -1207,7 +1207,7 @@
         },
         "runtime": {
           "BookService.Application.dll": {
-            "assemblyVersion": "1.0.0",
+            "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
         }
@@ -1215,7 +1215,7 @@
       "BookService.Domain/1.0.0": {
         "runtime": {
           "BookService.Domain.dll": {
-            "assemblyVersion": "1.0.0",
+            "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
         }
@@ -1232,7 +1232,7 @@
         },
         "runtime": {
           "BookService.Infrastructure.dll": {
-            "assemblyVersion": "1.0.0",
+            "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
         }
@@ -1240,7 +1240,7 @@
       "BookService.Message/1.0.0": {
         "runtime": {
           "BookService.Message.dll": {
-            "assemblyVersion": "1.0.0",
+            "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
         }
@@ -1255,7 +1255,7 @@
         },
         "runtime": {
           "Common.dll": {
-            "assemblyVersion": "1.0.0",
+            "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
         }

@@ -30,9 +30,12 @@ namespace BookService.Application.Services
                 imageUrl = await _cloudinaryService.UploadImageAsync(request.ImageFile);
             }
 
-            var entity = _mapper.Map<BookImage>(request);
-            entity.ImageUrl = imageUrl;
-            entity.UploadedAt = DateTime.UtcNow;
+            var entity = new BookImage
+            {
+                BookId = request.BookId,
+                ImageUrl = imageUrl,
+                UploadedAt = DateTime.UtcNow,
+            };
 
             var created = await _repo.CreateAsync(entity);
             return created;
@@ -69,9 +72,9 @@ namespace BookService.Application.Services
             return await _repo.GetAllAsync();
         }
 
-        public async Task<BookImage> GetByBookIdAsync(int bookId)
+        public async Task<List<BookImage>> GetByBookIdAsync(int bookId)
         {
-            return await _repo.GetByIdAsync(bookId);
+            return await _repo.GetByBookId(bookId);
         }
     }
 }

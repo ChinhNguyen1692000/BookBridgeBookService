@@ -65,9 +65,12 @@ namespace BookService.Application.Services
             var exist = await _repo.GetByIdAsync(dto.Id);
             if (exist == null)
                 throw new Exception("Book not found");
-
+            
             _mapper.Map(dto, exist);
             exist.UpdatedAt = DateTime.UtcNow;
+            if (exist.PublishedDate.HasValue)
+                exist.PublishedDate = DateTime.SpecifyKind(exist.PublishedDate.Value, DateTimeKind.Utc);
+
 
             return await _repo.UpdateAsync(exist);
         }
