@@ -70,28 +70,29 @@ namespace BookService.Api.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update([FromForm] BookUpdateRequest request)
         {
+            var exist = await _service.GetByIdAsync(request.BookstoreId);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            string? imageUrl = null;
+            string? imageUrl = exist.ImageUrl;
             if (request.ImageFile != null)
                 imageUrl = await _cloudinaryService.UploadImageAsync(request.ImageFile);
 
             var dto = new BookUpdateDTO
             {
                 Id = request.Id,
-                ISBN = request.ISBN,
-                BookstoreId = request.BookstoreId,
-                Title = request.Title,
-                Author = request.Author,
-                Translator = request.Translator,
+                ISBN = request.ISBN ?? exist.ISBN,
+                BookstoreId = request.BookstoreId != 0 ? request.BookstoreId : exist.BookstoreId,
+                Title = request.Title ?? exist.Title,
+                Author = request.Author ?? exist.Author,
+                Translator = request.Translator ?? exist.Translator,
                 Quantity = request.Quantity,
-                Publisher = request.Publisher,
-                PublishedDate = request.PublishedDate,
+                Publisher = request.Publisher ?? exist.Publisher,
+                PublishedDate = request.PublishedDate ?? exist.PublishedDate,
                 Price = request.Price,
-                Language = request.Language,
-                Description = request.Description,
-                PageCount = request.PageCount,
+                Language = request.Language ?? exist.Language,
+                Description = request.Description ?? exist.Description,
+                PageCount = request.PageCount ?? exist.PageCount,
                 TypeId = request.TypeId,
                 ImageUrl = imageUrl
             };
